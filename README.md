@@ -1,8 +1,8 @@
-# Tract Attack (Book of Heaven Studios)
+# Jim's Tract Attack (Book of Heaven Studios)
 
 Live: https://ploug76.github.io/tract-attack/  ·  Free sample: https://ploug76.github.io/tract-attack/?sample=bhs
 
-Hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free.
+Help Jim hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free.
 5 levels: 1 Main Street Morning (side), 2 Sunny Park (side, flying goblins), 3 Neighborhood Walk (top-down, gloom pits),
 4 Downtown at Night (side), 5 Farmers Market (top-down, gloom pits + the Big Grumble at the chapel door).
 
@@ -22,14 +22,15 @@ Hand out Bible tracts, send glowing prayers that turn little gloom goblins into 
 - Share/sample: entry at the end of /workspace/launch/share.py (before the runner): share_sample='bhs', CAP = levels 1–2 (locks on the level 3 intro; 8-minute backup). build.py asserts it.
 - Leaderboard: shared Firestore board `tract-attack` (games.py entry is set in memory by build.py). Name prompt pops on game over / mission complete. Tests never post (`window.__QA`).
 
-## Swapping the hero (when Peter's photo arrives)
-The hero is a placeholder ("Pete", blue cap, white tee with a gold cross, tract satchel). Everything about his look is the `HERO` object
-at the top of `src/2_art.js`:
-- `head` = 10x10 side view facing RIGHT, `headF` = front view, `headB` = back of head. Each letter is a colour in `HERO.pal`; `.` is see-through.
-- `shirt`, `shirt2`, `pants`, `shoes`, `bag`, `skin` colour the body.
-To use the photo: make a 10x10 pixel likeness with the J Woo method (/workspace/jwoo-likeness/), quantize it to a few colours,
-write those rows into `head`/`headF` (keep 10x10), set the colours in `pal`, then rebuild, bump `src/version`, retest and push.
-The game never embeds the real photo. Nothing else needs to change: animation, flipping and throwing all use the same maps.
+## The hero: Jim
+The hero is Jim, drawn as a pixel likeness that matches his other games (Jedi Jim): slicked-back grey hair, a full white-grey beard,
+a big smile and rosy cheeks. He wears street-ministry clothes: a chambray shirt, khakis and a brown satchel of tracts.
+- Sprite: the `HERO` object at the top of `src/2_art.js`. `head` = 12x14 side view facing RIGHT, `headF` = front, `headB` = back.
+  Each letter is a colour in `HERO.pal`; `.` is see-through. `shirt`, `shirt2`, `pants`, `shoes`, `bag`, `skin` colour the body.
+- Portrait (title, intro and win screens): `JIM_PORTRAIT`, a 52x52 pixel-art crop of the drawn Jim portrait from Jedi Jim
+  (`art/jim/mkjim.py` → `art/jim/portrait.b64`, injected by build.py at `%JIMPORT%`). It is drawn pixel art, not a photo.
+  The game never embeds a real photo.
+To change the hero, edit those maps and colours (J Woo method in /workspace/jwoo-likeness/), rebuild, bump `src/version`, retest and push.
 
 ## Tests (serve /workspace: `cd /workspace && python3 -m http.server 8890`)
 - `test/smoke.py`: title + levels at 390x844, iPad portrait 820x1180 and iPad landscape 1180x820; console errors.
