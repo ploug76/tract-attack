@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Tract Attack</title><!--og--><meta name="description" content="Hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta property="og:type" content="website"><meta property="og:site_name" content="Peter&#x27;s Arcade"><meta property="og:title" content="Tract Attack"><meta property="og:description" content="Hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta property="og:url" content="https://ploug76.github.io/tract-attack/"><meta property="og:image" content="https://ploug76.github.io/tract-attack/cover.png"><meta property="og:image:secure_url" content="https://ploug76.github.io/tract-attack/cover.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Tract Attack game cover"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Tract Attack"><meta name="twitter:description" content="Hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta name="twitter:image" content="https://ploug76.github.io/tract-attack/cover.png"><!--/og-->
+<title>Jim&#x27;s Tract Attack</title><!--og--><meta name="description" content="Help Jim hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta property="og:type" content="website"><meta property="og:site_name" content="Peter&#x27;s Arcade"><meta property="og:title" content="Jim&#x27;s Tract Attack"><meta property="og:description" content="Help Jim hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta property="og:url" content="https://ploug76.github.io/tract-attack/"><meta property="og:image" content="https://ploug76.github.io/tract-attack/cover.png"><meta property="og:image:secure_url" content="https://ploug76.github.io/tract-attack/cover.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Jim&#x27;s Tract Attack game cover with pixel-art Jim"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Jim&#x27;s Tract Attack"><meta name="twitter:description" content="Help Jim hand out Bible tracts, send glowing prayers that turn little gloom goblins into light, and set gloomy people free. 5 levels of side-scrolling and top-down action from Book of Heaven Studios."><meta name="twitter:image" content="https://ploug76.github.io/tract-attack/cover.png"><!--/og-->
 <meta name="theme-color" content="#120c2a"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Tract Attack">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Jim&#x27;s Tracts">
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#120c2a;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
 canvas{position:fixed;left:0;top:0;display:block;touch-action:none;image-rendering:pixelated}#sp{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}</style><!--sample--><script>(()=>{try{const R=location.pathname.split('/')[1]||'',K='pa_sample:'+R,q=new URLSearchParams(location.search),v=q.get('sample');
 if(v==='0'||(!v&&/\/peters-arcade\//.test(document.referrer)))sessionStorage.removeItem(K);
@@ -10,7 +10,7 @@ const s=sessionStorage.getItem(K);window.__SAMPLE=s||null;if(!s)return;
 document.querySelectorAll('link[rel=manifest]').forEach(l=>l.remove());
 if('serviceWorker' in navigator){try{navigator.serviceWorker.register=()=>new Promise(()=>{})}catch(e){}}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();e.stopImmediatePropagation()},true);window.__ACS=[];['AudioContext','webkitAudioContext'].forEach(n=>{const O=window[n];if(!O)return;const W=function(...a){const c=new O(...a);window.__ACS.push(c);return c};W.prototype=O.prototype;try{Object.setPrototypeOf(W,O)}catch(e){}window[n]=W})}catch(e){}})()</script><!--/sample--></head><body>
-<canvas id="cv" aria-label="Tract Attack game"></canvas><div id="sp"></div>
+<canvas id="cv" aria-label="Jim&#x27;s Tract Attack game"></canvas><div id="sp"></div>
 <script>window.addEventListener('error',e=>{(window.__ERR=window.__ERR||[]).push(String(e.message))});
 // ===================== Tract Attack — core (canvas, layout, utils, audio) =====================
 'use strict';
@@ -100,46 +100,60 @@ function drawMap(map,pal,x,y,flip=false,alpha=1){const w=map[0].length;if(alpha!
   if(alpha!==1)o.globalAlpha=1}
 
 /* ============================================================================================
-   HERO SPRITE — PLACEHOLDER (swap me!)
-   Peter will send a photo. To swap the hero, replace HERO below (see README.md):
-   - head:  10x10 side view facing RIGHT.  headF: 10x10 front view.  headB: back of head.
-   - Each letter is a colour from HERO.pal ('.' = see-through). Body colours are shirt/shirt2/pants/shoes/bag.
-   Keep the 10x10 size and the hero will animate, flip and throw exactly the same.
+   HERO SPRITE — JIM (Jim's Tract Attack)
+   Drawn pixel likeness matching Jim in his other games (Jedi Jim, Jim's Bible Challenge): an older man with
+   slicked-back grey hair, a full white-grey beard, a big smile and rosy cheeks. Colours sampled from the Jedi Jim
+   pixel portrait (jim.png, J Woo pix method). No photo is used or shipped.
+   - head: 12x14 side view facing RIGHT.  headF: 12x14 front view.  headB: back of head. '.' = see-through.
+   - JIM_PORTRAIT (title/intro/win cards) = head crop of the Jedi Jim pixel portrait, 52x52 pixel art (base64 PNG).
+   - Street-ministry outfit: light chambray shirt, khaki pants, brown shoes, leather satchel of tracts.
    ============================================================================================ */
-const HERO={name:'Pete',
- head:['..cccccc..',
-       '.cccccccc.',
-       '.ccccccbbb',
-       '.hhsssssss',
-       '.hhssseses',
-       '.hsssssss.',
-       '..sssssss.',
-       '..ssssmms.',
-       '...sssss..',
-       '....ss....'],
- headF:['..cccccc..',
-        '.cccccccc.',
-        '.cbbbbbbc.',
-        '.hssssssh.',
-        '.seessees.',
-        '.ssssssss.',
-        '.ssssssss.',
-        '..ssmmss..',
-        '...ssss...',
-        '....ss....'],
- headB:['..cccccc..',
-        '.cccccccc.',
-        '.cccccccc.',
-        '.hhhhhhhh.',
-        '.hhhhhhhh.',
-        '.hhhhhhhh.',
-        '.shhhhhhs.',
-        '..ssssss..',
-        '...ssss...',
-        '....ss....'],
- pal:{c:'#2f6fd6',b:'#1d4a99',h:'#6b4423',s:'#f0c08a',e:'#1b1530',m:'#b4513c'},
- shirt:'#ffffff',shirt2:'#d6e2f0',pants:'#34507a',shoes:'#f4f4f4',bag:'#9a6a35',skin:'#f0c08a'};
-
+const HERO={name:'Jim',
+ head:['..gGGGGg....',
+       '.gGGGGGGg...',
+       'gGGgGGGGGg..',
+       'gGGgssssss..',
+       'gGgssssEss..',
+       'gGsssssssn..',
+       '.gwssrrssn..',
+       '.wwwswmmmw..',
+       '.wwwwwmttm..',
+       '.wwwwwwmmw..',
+       '..wwwWwwww..',
+       '..wWwwwwW...',
+       '...wWwwW....',
+       '....sss.....'],
+ headF:['...gGGGGg...',
+        '..gGGGGGGg..',
+        '.gGgGGgGGgg.',
+        '.gssssssssg.',
+        '.sEEssssEEs.',
+        '.srrsssssrr.',
+        '.wsssnnsssw.',
+        '.wwwmmmmwww.',
+        '.wwmttttmww.',
+        '.wwwmmmmwww.',
+        '..wwwwwwww..',
+        '..wWwwwwWw..',
+        '...wWwwWw...',
+        '....ssss....'],
+ headB:['...gGGGGg...',
+        '..gGGGGGGg..',
+        '.gGGgGGgGGg.',
+        '.gGGGgGGGGg.',
+        '.gGgGGGGgGg.',
+        '.gGGGGgGGGg.',
+        '.gGGGGGGGGg.',
+        '.wgGGGGGGgw.',
+        '..wggggggw..',
+        '..wwssssww..',
+        '...wssssw...',
+        '............',
+        '............',
+        '....ssss....'],
+ pal:{g:'#8d8a86',G:'#c9c6c0',s:'#e8a57c',r:'#e0705e',E:'#3a2418',n:'#c9805a',w:'#ece9e3',W:'#bdb8b0',m:'#6a2a22',t:'#ffffff'},
+ shirt:'#8fb8de',shirt2:'#6f97bf',pants:'#b49a6a',shoes:'#5a3820',bag:'#8b5a2b',skin:'#e8a57c'};
+const JIM_PORTRAIT=new Image();JIM_PORTRAIT.src='data:image/png;base64,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';
 // generic head maps for passers-by (h hair, s skin, e eye, m mouth)
 const HEADS={
  short:{s:['..hhhhh...','.hhhhhhhh.','.hhhhhhhhh','.hhhsssss.','.hhssseses','.hsssssss.','..sssssss.','..ssssmms.','...sssss..','....ss....'],
@@ -169,14 +183,14 @@ function drawPerson(x,y,L,face,ph,act,dir){const kid=L.kid,leg=kid?3:5,tor=kid?6
   // torso (dress = flared)
   const ty=y-leg-tor;if(L.dress&&!L.hero){px(x-4,ty,8,tor,L.shirt);px(x-5,ty+tor-3,10,3,L.shirt)}else{px(x-4,ty,8,tor,L.shirt);px(x-4,ty+tor-2,8,1,L.shirt2)}
   if(L.hero){if(!front){o.fillStyle=HERO.bag;for(let i=0;i<tor;i++)o.fillRect(x+(face>0?2-i*0.7:-3+i*0.7)|0,ty+i,1,1);px(x-(face>0?6:-2),ty+tor-4,4,4,HERO.bag);px(x-(face>0?6:-2),ty+tor-4,4,1,'#c99a5a')}
-    else{px(x-1,ty+1,2,5,'#e8c34a');px(x-2,ty+2,4,1,'#e8c34a')}} // little gold cross on the tee (front)
+    else{o.fillStyle=HERO.bag;for(let i=0;i<tor;i++)o.fillRect(x-3+i,ty+i,1,1);px(x+2,ty+tor-3,4,4,HERO.bag);px(x+2,ty+tor-3,4,1,'#c99a5a');px(x-1,ty+2,1,1,'#fff');px(x-1,ty+5,1,1,'#fff')}} // satchel strap + shirt buttons (front)
   // arms
   if(front){px(x-6,ty+1+(sw>0?1:0),2,tor-2,L.shirt);px(x+4,ty+1+(sw<0?1:0),2,tor-2,L.shirt);px(x-6,ty+tor-1,2,2,L.skin);px(x+4,ty+tor-1,2,2,L.skin)}
   else if(act>0){px(x+(face>0?3:-9),ty+1,6,2,L.shirt);px(x+(face>0?9:-11),ty+1,2,2,L.skin);if(L.hero)px(x+(face>0?9:-12),ty-2,3,4,'#fff')}
   else{px(x-1-sw*face*0.6,ty+1,2,tor-2,L.shirt);px(x-1-sw*face*0.6,ty+tor-1,2,2,L.skin)}
   // head
   const hx=x-5,hy=top;
-  if(L.hero){const m=dir==='u'?HERO.headB:dir==='d'?HERO.headF:HERO.head;drawMap(m,HERO.pal,hx,hy,!front&&face<0)}
+  if(L.hero){const m=dir==='u'?HERO.headB:dir==='d'?HERO.headF:HERO.head,mw=m[0].length,mh=m.length;drawMap(m,HERO.pal,x-Math.floor(mw/2)+(front?0:(face>0?0:0)),y-leg-tor-mh+1,!front&&face<0)}
   else{const H=HEADS[L.style]||HEADS.short;let m=dir==='d'?H.f:H.s;if(dir==='u')m=H.f.map((r,i)=>i<8?r.replace(/[sem]/g,'h'):r);drawMap(m,headPal(L),hx,hy,!front&&face<0)}
 }
 // goblin: small original shadow imp (indigo, big lantern eyes, pointy ears, wispy bottom). No horns, no tail, no pitchfork.
@@ -359,8 +373,12 @@ function throwTract(){if(H.cdB>0)return;H.cdB=0.32;H.act=0.25;SFX.tract();ST.giv
   else shots.push({k:'tract',x:H.x+d.x*6,y:H.y-8+d.y*4,vx:d.x*140,vy:d.y*140,g:0,life:0.75,ph:0})}
 function pray(){if(H.cdA>0)return;H.cdA=0.3;SFX.pray();const d=dirVec();
   if(W.type==='side')shots.push({k:'pray',x:H.x+H.face*8,y:H.y-14,vx:H.face*165,vy:0,life:1.05,ph:0,y0:H.y-14});
-  else shots.push({k:'pray',x:H.x+d.x*6,y:H.y-9+d.y*4,vx:d.x*160,vy:d.y*160,life:0.95,ph:0});
+  else{let vx=d.x,vy=d.y;const t0=aimAssist(d);if(t0){const ax=t0.x-H.x,ay=(t0.y-(t0.k==='boss'?14:t0.gl?0:6))-(H.y-9),n=Math.hypot(ax,ay)||1;vx=ax/n;vy=ay/n}
+    shots.push({k:'pray',x:H.x+vx*6,y:H.y-9+vy*4,vx:vx*160,vy:vy*160,life:0.95,ph:0,aim:!!t0})}
   part(H.x,H.y-22,6,['#fff6c0','#ffe08a','#fff'],{sp:20,up:-25,add:true,life:0.6})}
+// top-down aim assist: lock onto the nearest goblin / gloomy person / gloom pit within a 40° cone (each side) and 120 px
+function aimAssist(d){let best=null,bd=1e9;const c=[...gobs.filter(b=>!b.dying),...W.people.filter(p=>p.st==='trouble'),...W.gloom.filter(p=>p.alive).map(p=>({x:p.x,y:p.y,gl:1}))];
+  for(const f of c){const ax=f.x-H.x,ay=f.y-H.y,dist=Math.hypot(ax,ay);if(dist>120||dist<1)continue;const cos=(ax*d.x+ay*d.y)/dist;if(cos<0.766)continue;const sc=dist*(2-cos);if(sc<bd){bd=sc;best=f}}return best}
 function dirVec(){if(W.type==='side')return{x:H.face,y:0};return{x:H.dir==='l'?-1:H.dir==='r'?1:0,y:H.dir==='u'?-1:H.dir==='d'?1:0}}
 function give(p){p.got=true;p.face=H.x<p.x?-1:1;const L=Lv();
   let turn=Math.random()<L.turn;if(level===1&&ST.gives>=1&&!tutor.turned)turn=true; // first level always shows one gloomy turn as a lesson
@@ -499,7 +517,7 @@ function worldToScreen(x,y){const F=LY.field;return [F.x+(x-camX)*S,F.y+(y-camY)
 function padPath(cx,cy,a){const h=a*1.5,w=a/2;g.beginPath();g.moveTo(cx-w,cy-h);g.lineTo(cx+w,cy-h);g.lineTo(cx+w,cy-w);g.lineTo(cx+h,cy-w);g.lineTo(cx+h,cy+w);g.lineTo(cx+w,cy+w);g.lineTo(cx+w,cy+h);g.lineTo(cx-w,cy+h);g.lineTo(cx-w,cy+w);g.lineTo(cx-h,cy+w);g.lineTo(cx-h,cy-w);g.lineTo(cx-w,cy-w);g.closePath()}
 function drawController(){const C=LY.ctrl,P=LY.pad,a=P.a,side=W&&W.type==='side';
   if(C){rr(C.x+6,C.y+4,C.w-12,C.h-10,22);g.fillStyle='#b9b4c4';g.fill();rr(C.x+14,C.y+12,C.w-28,C.h-26,16);g.fillStyle='#2b2733';g.fill();
-    txt('TRACT ATTACK',C.x+C.w-30,C.y+32,18,'#ffcf4a','right',{st:0})}
+    txt("JIM'S TRACT ATTACK",C.x+C.w-30,C.y+32,fitSize("JIM'S TRACT ATTACK",C.w*0.5,18,16),'#ffcf4a','right',{st:0})}
   g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowOffsetY=4;padPath(P.cx,P.cy,a);g.fillStyle='#121016';g.fill();g.restore();
   const lit={l:held.l,r:held.r,u:held.u,d:held.d};const arr={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
   for(const k in arr){const [ux,uy]=arr[k],x=P.cx+ux*a,y=P.cy+uy*a;if(lit[k]){g.fillStyle='#e8c34a';g.fillRect(x-a/2+3,y-a/2+3,a-6,a-6)}
@@ -519,10 +537,13 @@ function drawHUD(){const T=LY.top,L=LY.land;g.fillStyle='#120c2a';g.fillRect(0,0
 function drawTopBtns(){for(const b of LY.tb){if(b.k==='pause'&&state!=='play')continue;const lbl=b.k==='help'?'?':b.k==='mute'?(muted?'🔇':'🔊'):(paused?'▶':'❚❚');
   rr(b.x,b.y,b.w,b.h,22);g.fillStyle=pressBtn==='tb_'+b.k?'#4a3f88':'#2a2160';g.fill();g.lineWidth=2;g.strokeStyle='#fff';g.stroke();txt(lbl,b.x+b.w/2,b.y+b.h/2+1,b.k==='help'?22:18,'#fff','center',{st:0});
   menuBtns.push({id:'tb_'+b.k,x:b.x,y:b.y,w:b.w,h:b.h,fn:()=>{if(b.k==='help')helpOpen=!helpOpen;else if(b.k==='mute')setMute(!muted);else paused=!paused}})}}
-function drawFloats(){const F=LY.field;g.save();g.beginPath();g.rect(F.x,F.y,F.w,F.h);g.clip();
-  for(const f of floats){const [x,y]=worldToScreen(f.x,f.y);g.globalAlpha=Math.min(1,f.life*2);txt(f.s,x,y,18,f.col)}g.globalAlpha=1;
-  for(const p of W.people){if(p.bubT>0&&p.bub){const [x,y]=worldToScreen(p.x,p.y-(p.look.kid?30:36));g.font='bold 16px '+FONT;const w=g.measureText(p.bub).width+16;const bx=clamp(x-w/2,F.x+4,F.x+F.w-w-4);
-    rr(bx,y-30,w,28,10);g.fillStyle=p.st==='turning'||p.st==='trouble'?'#3b2a5c':'#fff';g.fill();txt(p.bub,bx+w/2,y-16,16,p.st==='turning'?'#fff':'#2a1840','center',{st:0})}}
+function drawFloats(){const F=LY.field;g.save();g.beginPath();g.rect(F.x,F.y,F.w,F.h);g.clip();const placed=[];
+  const fit=(x,y,w,h)=>{let yy=y;for(let k=0;k<12;k++){const hit=placed.find(r=>x<r.x+r.w&&x+w>r.x&&yy<r.y+r.h&&yy+h>r.y);if(!hit)break;yy=hit.y-h-3}placed.push({x,y:yy,w,h});return yy};
+  const bs=W.people.filter(p=>p.bubT>0&&p.bub).sort((a,b)=>b.y-a.y||a.x-b.x);
+  for(const p of bs){const [x,y]=worldToScreen(p.x,p.y-(p.look.kid?30:36));g.font='bold 16px '+FONT;const w=g.measureText(p.bub).width+16;const bx=clamp(x-w/2,F.x+4,F.x+F.w-w-4);const by=fit(bx,y-30,w,28);
+    g.globalAlpha=Math.min(1,p.bubT*3);rr(bx,by,w,28,10);g.fillStyle=p.st==='turning'||p.st==='trouble'?'#3b2a5c':'#fff';g.fill();txt(p.bub,bx+w/2,by+14,16,p.st==='turning'?'#fff':'#2a1840','center',{st:0});g.globalAlpha=1}
+  for(const f of floats.slice().sort((a,b)=>b.life-a.life)){const [x,y]=worldToScreen(f.x,f.y);g.font='bold 18px '+FONT;const w=g.measureText(f.s).width+6;const fx=clamp(x-w/2,F.x+2,F.x+F.w-w-2);const fy=fit(fx,y-11,w,22);
+    g.globalAlpha=Math.min(1,f.life*2);txt(f.s,fx+w/2,fy+11,18,f.col)}g.globalAlpha=1;
   if(toastT>0){const lines=wrap(toastMsg,F.w-40,18);const h=lines.length*24+16,y=F.y+12;g.globalAlpha=Math.min(1,toastT*3);rr(F.x+12,y,F.w-24,h,12);g.fillStyle='rgba(20,12,50,.88)';g.fill();g.strokeStyle='#ffcf4a';g.lineWidth=2;g.stroke();lines.forEach((l,i)=>txt(l,F.x+F.w/2,y+20+i*24,18,'#fff'));g.globalAlpha=1}
   g.restore()}
 // ---------- screens (title / intro / pause / clear / over / win / help / levels)
@@ -536,15 +557,21 @@ function drawTitle(){const c=centerCol(),F=c.F;
   button('how',c.x+hw+8,by+bh+gap,hw,bh,'❓ HOW TO','#7a3fbf',()=>{helpOpen=true},18);
   button('easy',c.x,by+2*(bh+gap),hw,bh,EASY?'😊 GENTLE':'⚔️ NORMAL','#b5523b',()=>{EASY=!EASY;localStorage.setItem('ta_easy',EASY?'1':'0')},18);
   button('music',c.x+hw+8,by+2*(bh+gap),hw,bh,musicOn?'🎵 MUSIC ON':'🎵 MUSIC OFF','#45405e',()=>{musicOn=!musicOn;localStorage.setItem('ta_music',musicOn?'1':'0')},18);
-  const top=F.y+6,avail=by-top-8;let sz=Math.min(58,F.w/6.2,(avail-44)/2.05);
-  if(sz>=22){txt('TRACT',CW/2,top+sz*0.6,sz,'#ffe14a','center',{lw:Math.max(5,sz/7),st:'#3a1d00'});txt('ATTACK!',CW/2,top+sz*1.62,sz,'#ffffff','center',{lw:Math.max(5,sz/7),st:'#3b2a5c'});
-    const y2=top+sz*2.2+12;if(y2+10<by-28)txt('A Book of Heaven Studios game',CW/2,y2,16,'#d9ccff');txt('BEST '+best,CW/2,Math.max(y2+24,by-16),17,'#ffe14a','center',{f:PIX})}
-  else{sz=fitSize('TRACT ATTACK!',c.w,Math.max(20,Math.min(40,avail-26)),20);txt('TRACT ATTACK!',CW/2,top+sz*0.6,sz,'#ffe14a','center',{lw:5,st:'#3a1d00'});if(avail-sz*1.2>22)txt('BEST '+best,CW/2,by-16,17,'#ffe14a','center',{f:PIX})}}
+  const top=F.y+6,avail=by-top-8,wide=F.w>=520;
+  if(wide){const R=Math.min(62,(avail-12)/2);let sz=Math.min(54,(avail-30)/2.7,(F.w-2*R-60)/5.2);if(R>=26&&sz>=20){const tw=sz*4.4,bx=CW/2-(2*R+18+tw)/2;drawPortrait(bx+R,top+avail/2-6,R);const tx=bx+2*R+18+tw/2;titleText(tx,top+avail/2-sz*1.35-6,sz);return}}
+  let R=Math.min(58,avail*0.2),sz=Math.min(54,F.w/6.2,(avail-2*R-14-24)/2.7);
+  if(R>=26&&sz>=22){drawPortrait(CW/2,top+R+2,R);titleText(CW/2,top+2*R+12,sz)}
+  else{sz=Math.min(54,F.w/6.2,(avail-24)/2.7);if(sz>=20)titleText(CW/2,top+2,sz);else{sz=fitSize("JIM'S TRACT ATTACK!",c.w,Math.max(18,Math.min(36,avail-26)),18);txt("JIM'S TRACT ATTACK!",CW/2,top+sz*0.6,sz,'#ffe14a','center',{lw:5,st:'#3a1d00'})}}}
+function titleText(cx,y,sz){txt("JIM'S",cx,y+sz*0.3,Math.round(sz*0.55),'#9ff7ff','center',{lw:5,st:'#12324a'});
+  txt('TRACT',cx,y+sz*1.1,sz,'#ffe14a','center',{lw:Math.max(5,sz/7),st:'#3a1d00'});txt('ATTACK!',cx,y+sz*2.1,sz,'#ffffff','center',{lw:Math.max(5,sz/7),st:'#3b2a5c'});
+  txt('BEST '+best,cx,y+sz*2.1+sz*0.5+14,17,'#ffe14a','center',{f:PIX})}
+function drawPortrait(cx,cy,R){g.save();g.beginPath();g.arc(cx,cy,R,0,7);g.fillStyle='#6fb6e8';g.fill();g.clip();if(JIM_PORTRAIT.complete&&JIM_PORTRAIT.naturalWidth){g.imageSmoothingEnabled=false;g.drawImage(JIM_PORTRAIT,cx-R*1.04,cy-R*1.0,R*2.08,R*2.08)}g.restore();
+  g.lineWidth=4;g.strokeStyle='#ffcf4a';g.beginPath();g.arc(cx,cy,R,0,7);g.stroke()}
 function drawLevels(){const c=centerCol(),F=c.F,bh=50,gap=9,h=(bh+gap)*(NL+1)+70,y0=Math.max(F.y+8,F.y+(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('PICK A LEVEL',CW/2,y0+28,22,'#ffe14a');
   for(let i=1;i<=NL;i++){const L=LEVELS[i-1],op=i<=unlocked;button('lv'+i,c.x+4,y0+52+(i-1)*(bh+gap),c.w-8,bh,(op?'':'🔒 ')+i+'. '+L.n+(L.type==='top'?' (top-down)':''),op?(L.type==='top'?'#2f8f8f':'#3a5fcf'):'#555',()=>{if(op){levelPick=false;if(i===1)score=0;newGame(i)}else{toast('Finish level '+(i-1)+' to open this one!');SFX.no()}},18)}
   button('back',c.x+4,y0+52+NL*(bh+gap),c.w-8,bh,'◀ BACK','#45405e',()=>{levelPick=false})}
 function drawIntro(){const c=centerCol(),F=c.F,L=Lv();const lines=wrap(L.tip,c.w-24,17);const h=168+lines.length*23,y0=F.y+Math.max(8,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);
-  txt('LEVEL '+level+' of '+NL,CW/2,y0+26,18,'#c9b8ff');txt(L.n,CW/2,y0+56,fitSize(L.n,c.w-10,26,18),'#ffe14a');
+  drawPortrait(c.x+24,y0+30,22);txt('LEVEL '+level+' of '+NL,CW/2,y0+26,18,'#c9b8ff');txt(L.n,CW/2,y0+56,fitSize(L.n,c.w-10,26,18),'#ffe14a');
   txt((L.type==='side'?'Side-scrolling':'Top-down')+' · Hand out '+L.quota+' tracts',CW/2,y0+86,fitSize('Side-scrolling · Hand out 10 tracts',c.w-10,17),'#fff');
   lines.forEach((l,i)=>txt(l,CW/2,y0+114+i*23,17,'#d9f7ff'));
   button('start',c.x+20,y0+h-62,c.w-40,50,'START ▶','#1f9d55',()=>{state='play';toast(L.type==='side'?'Hand out tracts with B · Pray with A':'Top-down: walk any way · B tract · A pray',2.4)},22);menuBtns[menuBtns.length-1].primary=1}
@@ -561,11 +588,11 @@ function drawOver(){const c=centerCol(),F=c.F,h=250,y0=F.y+Math.max(6,(F.h-h)/2)
   const l=wrap("Don't give up! Every tract you gave still counts.",c.w-10,17);l.forEach((s,i)=>txt(s,CW/2,y0+64+i*22,17,'#fff'));txt('SCORE '+score,CW/2,y0+64+l.length*22+14,20,'#ffe14a','center',{f:PIX});
   button('retry',c.x+10,y0+h-104,c.w-20,48,'↻ TRY LEVEL '+level+' AGAIN','#1f9d55',()=>{score=levelStartScore;startLevel(level)},19);menuBtns[menuBtns.length-1].primary=1;
   button('ttl2',c.x+10,y0+h-50,c.w-20,42,'🏠 TITLE','#45405e',()=>{state='title'},18)}
-function drawWin(){const c=centerCol(),F=c.F,h=Math.min(F.h-10,380),y0=F.y+Math.max(4,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('MISSION COMPLETE!',CW/2,y0+32,fitSize('MISSION COMPLETE!',c.w-10,27),'#7dffb0');
+function drawWin(){const c=centerCol(),F=c.F,h=Math.min(F.h-10,380),y0=F.y+Math.max(4,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('WELL DONE, JIM!',CW/2,y0+32,fitSize('WELL DONE, JIM!',c.w-10,27),'#7dffb0');
   const l=wrap('"How beautiful are the feet of them that preach the gospel of peace" (Romans 10:15)',c.w-16,16);l.forEach((s,i)=>txt(s,CW/2,y0+62+i*21,16,'#d9f7ff'));
   const yy=y0+70+l.length*21;tally(yy,c);txt('FINAL SCORE '+score,CW/2,y0+h-82,21,'#ffe14a','center',{f:PIX});
   button('again',c.x+10,y0+h-62,c.w/2-15,48,'↻ AGAIN','#1f9d55',()=>{score=0;newGame(1)},19);menuBtns[menuBtns.length-1].primary=1;button('ttl3',c.x+c.w/2+5,y0+h-62,c.w/2-15,48,'🏠 TITLE','#45405e',()=>{state='title'},19)}
-const HELP=[['GOAL','Walk around, hand out Bible tracts to people, and pray away the little gloom goblins. Hand out enough tracts, then go to the church to finish the level.'],
+const HELP=[['GOAL','Help Jim walk around, hand out Bible tracts to people, and pray away the little gloom goblins. Hand out enough tracts, then go to the church to finish the level.'],
  ['D-PAD','◀ ▶ walk. Side levels: ▲ jumps, ▼ drops off a bench. Top-down levels: walk any way.'],
  ['B = TRACT','Hands a tract to someone close, or tosses one to them. Happy people give +100.'],
  ['A = PRAY','Sends a glowing prayer of light. Goblins dissolve into light (+50).'],
@@ -643,7 +670,7 @@ const _upd=update;update=function(dt){if(window.__QA&&__QA.auto&&state==='play'&
 #dockHint{position:fixed;z-index:61;display:none;box-sizing:border-box;background:rgba(10,10,20,.92);color:#fff;border:2px solid #fff;border-radius:12px;font:13px/1.3 system-ui,-apple-system,sans-serif;padding:7px 36px 7px 10px;top:0;left:0}#dockHint.inl{position:relative;margin:4px auto;max-width:320px}
 #dockHintX{position:absolute;right:3px;top:50%;margin-top:-15px;width:30px;height:30px;border-radius:15px;border:0;background:#fff;color:#000;font:bold 15px sans-serif;padding:0;cursor:pointer}
 #shareToast{position:fixed;z-index:62;display:none;box-sizing:border-box;height:34px;border-radius:17px;border:2px solid #fff;background:#1f9d55;color:#fff;font:bold 13px/30px system-ui,sans-serif;text-align:center;white-space:nowrap;pointer-events:none;overflow:hidden}
-#inst,#ios,#ioshint{display:none!important}#dkProbe{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}.dk.smp{position:relative;opacity:.62;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#ff5050}.dk.smp:after{content:'';position:absolute;left:5px;right:5px;top:50%;height:3px;margin-top:-1px;background:#ff3b3b;border-radius:2px;transform:rotate(-16deg);pointer-events:none}#dockHint.smpc{padding:9px 38px 10px 11px;font-size:14px}#dockHint.smpc b{color:#ffd84a}#smpBuy{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:8px 0 0;height:34px;border-radius:17px;border:2px solid #fff;background:#e0439a;color:#fff;font:bold 14px/30px system-ui,-apple-system,sans-serif;padding:0 14px;cursor:pointer;touch-action:manipulation}#smpBuy.off{background:#444;opacity:.85;cursor:default}#smpBack{position:fixed;inset:0;z-index:59;display:none;background:rgba(0,0,0,.55)}</style><div id="dock" role="toolbar" aria-label="Share and install"><button id="shareBtn" class="dk" type="button" aria-label="Share this game">🔗 Share</button><button id="instBtn" class="dk" type="button" aria-label="Install this game as an app">📲 Install</button></div><div id="dockHint" role="note">📲 On iPhone/iPad: tap Share <b>⬆</b> then “Add to Home Screen”.<button id="dockHintX" type="button" aria-label="Dismiss tip">✕</button></div><div id="shareToast" role="status" aria-live="polite">Link copied!</div><div id="dkProbe"></div><div id="smpBack"></div><script>(()=>{const SH={"title": "Tract Attack", "text": "Play Tract Attack — hand out Bible tracts and pray away the gloom goblins! A free family-friendly game from Book of Heaven Studios.", "url": "https://ploug76.github.io/tract-attack/"},ALLOW=[],INLINE=null,SHTXT="🔗 Share",SMP=window.__SAMPLE||null,PAYI=({"bhs": "https://ko-fi.com/bookofheavenstudios/commissions?commissionAlias=5df889530a", "589": "https://ko-fi.com/five8nine/commissions?commissionAlias=5c81b9373a"})[SMP]||'',PRICE="$1.99";const $=i=>document.getElementById(i);
+#inst,#ios,#ioshint{display:none!important}#dkProbe{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}.dk.smp{position:relative;opacity:.62;text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#ff5050}.dk.smp:after{content:'';position:absolute;left:5px;right:5px;top:50%;height:3px;margin-top:-1px;background:#ff3b3b;border-radius:2px;transform:rotate(-16deg);pointer-events:none}#dockHint.smpc{padding:9px 38px 10px 11px;font-size:14px}#dockHint.smpc b{color:#ffd84a}#smpBuy{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:8px 0 0;height:34px;border-radius:17px;border:2px solid #fff;background:#e0439a;color:#fff;font:bold 14px/30px system-ui,-apple-system,sans-serif;padding:0 14px;cursor:pointer;touch-action:manipulation}#smpBuy.off{background:#444;opacity:.85;cursor:default}#smpBack{position:fixed;inset:0;z-index:59;display:none;background:rgba(0,0,0,.55)}</style><div id="dock" role="toolbar" aria-label="Share and install"><button id="shareBtn" class="dk" type="button" aria-label="Share this game">🔗 Share</button><button id="instBtn" class="dk" type="button" aria-label="Install this game as an app">📲 Install</button></div><div id="dockHint" role="note">📲 On iPhone/iPad: tap Share <b>⬆</b> then “Add to Home Screen”.<button id="dockHintX" type="button" aria-label="Dismiss tip">✕</button></div><div id="shareToast" role="status" aria-live="polite">Link copied!</div><div id="dkProbe"></div><div id="smpBack"></div><script>(()=>{const SH={"title": "Jim's Tract Attack", "text": "Play Jim's Tract Attack — help Jim hand out Bible tracts and pray away the gloom goblins! A free family-friendly game from Book of Heaven Studios.", "url": "https://ploug76.github.io/tract-attack/"},ALLOW=[],INLINE=null,SHTXT="🔗 Share",SMP=window.__SAMPLE||null,PAYI=({"bhs": "https://ko-fi.com/bookofheavenstudios/commissions?commissionAlias=5df889530a", "589": "https://ko-fi.com/five8nine/commissions?commissionAlias=5c81b9373a"})[SMP]||'',PRICE="$1.99";const $=i=>document.getElementById(i);
 if(SMP){SH.url=SH.url+'?sample='+encodeURIComponent(SMP);const h0=$('dockHint');h0.classList.add('smpc');h0.setAttribute('role','dialog');h0.innerHTML='<b>Sample version</b> — install the full game on your phone for '+PRICE+'<button id="smpBuy" type="button"'+(PAYI?'':' class="off" aria-disabled="true"')+'>'+(PAYI?'💳 Buy '+PRICE:'Checkout coming soon')+'</button><button id="dockHintX" type="button" aria-label="Close">✕</button>'}
 if(!SMP)SH.url=SH.url+'?sample='+"bhs";const bk=$('smpBack'),dock=$('dock'),sb=$('shareBtn'),ib=$('instBtn'),hint=$('dockHint'),hx=$('dockHintX'),toastEl=$('shareToast'),probe=$('dkProbe');
 if(INLINE){const a=document.querySelector(INLINE);if(a){a.after(dock);dock.after(hint)}dock.classList.add('inl');hint.classList.add('inl')}
@@ -886,4 +913,4 @@ async function postNow(){if(!G)return;const F=x=>x==null?()=>undefined:typeof x=
   return show()}
 const api={init,postNow,syncBest,localBest,gameOver,submitQuiet,watch,show,close,isOpen:()=>open,get backend(){return REMOTE?REMOTE.name:'local'},_t:{cleanName,nameError,fmt,boardId,pid,keyOf}};
 window.PALB=api})();
-</script><script>PALB.init({"game": "tract-attack", "title": "Tract Attack", "order": "desc", "unit": "pts", "min": 0, "max": 1000000, "boards": null, "watch": [{"when": "(state==='over'||state==='win')&&!window.__QA", "score": "score", "valid": "score>0"}], "overTitle": "🙏 MISSION REPORT"})</script><!--/lb--></body></html>
+</script><script>PALB.init({"game": "tract-attack", "title": "Jim's Tract Attack", "order": "desc", "unit": "pts", "min": 0, "max": 1000000, "boards": null, "watch": [{"when": "(state==='over'||state==='win')&&!window.__QA", "score": "score", "valid": "score>0"}], "overTitle": "🙏 MISSION REPORT"})</script><!--/lb--></body></html>
