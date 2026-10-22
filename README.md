@@ -22,15 +22,17 @@ Help Jim hand out Bible tracts, send glowing prayers that turn little gloom gobl
 - Share/sample: entry at the end of /workspace/launch/share.py (before the runner): share_sample='bhs', CAP = levels 1–2 (locks on the level 3 intro; 8-minute backup). build.py asserts it.
 - Leaderboard: shared Firestore board `tract-attack` (games.py entry is set in memory by build.py). Name prompt pops on game over / mission complete. Tests never post (`window.__QA`).
 
-## The hero: Jim
-The hero is Jim, drawn as a pixel likeness that matches his other games (Jedi Jim): slicked-back grey hair, a full white-grey beard,
-a big smile and rosy cheeks. He wears street-ministry clothes: a chambray shirt, khakis and a brown satchel of tracts.
-- Sprite: the `HERO` object at the top of `src/2_art.js`. `head` = 12x14 side view facing RIGHT, `headF` = front, `headB` = back.
-  Each letter is a colour in `HERO.pal`; `.` is see-through. `shirt`, `shirt2`, `pants`, `shoes`, `bag`, `skin` colour the body.
-- Portrait (title, intro and win screens): `JIM_PORTRAIT`, a 52x52 pixel-art crop of the drawn Jim portrait from Jedi Jim
-  (`art/jim/mkjim.py` → `art/jim/portrait.b64`, injected by build.py at `%JIMPORT%`). It is drawn pixel art, not a photo.
-  The game never embeds a real photo.
-To change the hero, edit those maps and colours (J Woo method in /workspace/jwoo-likeness/), rebuild, bump `src/version`, retest and push.
+## The hero: Bible Jim
+The hero is **Bible Jim**, the Jim from Jim's Bible Challenge. He is *not* Jedi Jim, who is a different person.
+His likeness comes from Peter's reference photo (`/workspace/bible-jim-ref/`, which is never shipped): an elderly man with short
+white/silver hair combed back, a round friendly face, rosy cheeks, a warm closed-mouth smile, a bright blue pinstripe suit,
+a white shirt and a navy patterned tie. In the game he also carries a leather satchel of tracts.
+- Sprite: the `HERO` object at the top of `src/2_art.js`. `head` = 12x12 side view facing RIGHT, `headF` = front, `headB` = back.
+  Each letter is a colour in `HERO.pal`. `shirt`/`pants` = suit blue, and `stripe`, `collar`, `tie`, `tieDot` and `bag` style the outfit.
+- Portrait (title, intro and win screens): `JIM_PORTRAIT`, a 64x64, 40-colour pixel-art PNG made with the J Woo method.
+  `art/biblejim/mkportrait.py` runs `pix()` on a *drawn* pixel portrait (`art/biblejim/drawn-src.jpg`, generated from the reference)
+  and writes `portrait.b64`; build.py injects it at `%JIMPORT%`. **The real photo is never embedded.**
+- After any change: rebuild, bump `src/version`, regenerate the cover (`test/capture.py 4 9000 30`, then `python3 art/mkcover.py art`), retest and push.
 
 ## Tests (serve /workspace: `cd /workspace && python3 -m http.server 8890`)
 - `test/smoke.py`: title + levels at 390x844, iPad portrait 820x1180 and iPad landscape 1180x820; console errors.
