@@ -3,7 +3,7 @@
 <meta name="theme-color" content="#120c2a"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Jim&#x27;s Tracts">
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#120c2a;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
-canvas{position:fixed;left:0;top:0;display:block;touch-action:none;image-rendering:pixelated}#sp{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}</style><script>const FORCE_UNLOCKED = true; // Peter 10/28: free until further notice. Set to false to restore the lock.
+canvas{position:fixed;left:0;top:0;display:block;touch-action:none;image-rendering:pixelated}#sp{position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}</style><style id="ta44">/* v4: every tap target 44px+ and overlay text 16px+ (this game only; the shared share/sample/leaderboard code is untouched) */html body #dock .dk{height:44px!important;line-height:40px!important;border-radius:22px!important;font-size:16px!important;padding:0 14px!important;min-width:44px!important}html body #dock .dk.ic,html body #dock .dk.ic~#lbBtn{width:44px!important;padding:0!important;font-size:18px!important}html body #dockHint{font-size:16px!important;padding-right:56px!important}html body #dockHint.smpc{font-size:16px!important}html body #dockHintX{width:44px!important;height:44px!important;margin-top:-22px!important;border-radius:22px!important;right:4px!important;font-size:18px!important}html body #smpBuy{height:44px!important;line-height:40px!important;border-radius:22px!important;font-size:16px!important}html body #shareToast{height:44px!important;line-height:40px!important;border-radius:22px!important;font-size:16px!important}html body #smpLock p{font-size:16px!important}html body #smpLock .lnk{display:flex!important;align-items:center;justify-content:center;min-height:44px;font-size:16px!important;margin-top:6px!important}html body #palbCard .sub,html body #palbCard .note,html body #palbCard .err,html body #palbCard .src,html body #palbCard .mybest,html body #palbList li,html body #palbCard div[style*=font-size]{font-size:16px!important}html body #palbList li{height:32px!important}html body #palbTabs button{min-height:44px!important;font-size:16px!important;border-radius:22px!important}html body #palbX{width:44px!important;height:44px!important;border-radius:22px!important}</style><script>const FORCE_UNLOCKED = true; // Peter 10/28: free until further notice. Set to false to restore the lock.
 window.__FORCE_UNLOCKED=FORCE_UNLOCKED;</script><!--sample--><script>(()=>{try{if(window.__FORCE_UNLOCKED){window.__SAMPLE=null;try{sessionStorage.removeItem('pa_sample:'+(location.pathname.split('/')[1]||''))}catch(e){}return}const R=location.pathname.split('/')[1]||'',K='pa_sample:'+R,q=new URLSearchParams(location.search),v=q.get('sample');
 if(v==='0'||(!v&&/\/peters-arcade\//.test(document.referrer)))sessionStorage.removeItem(K);
 if(v&&v!=='0')sessionStorage.setItem(K,v.replace(/[^a-z0-9-]/gi,'').slice(0,16)||'1');
@@ -34,17 +34,21 @@ function layout(){
   y.tb=['help','mute','pause'].map((k,i)=>({k,x:R-6-44-48*i,y:T+4,w:44,h:44}));   // top-right buttons (right:6/54/102)
   if(!land){
     const ch=clamp(Math.round((B-T)*0.30),206,300),cw=R-L;y.ctrl={x:L,y:B-ch,w:cw,h:ch};
-    const a=clamp(Math.round(Math.min(cw*0.135,ch*0.25)),46,66);y.pad={cx:L+16+1.5*a+6,cy:B-ch/2+6,a};
-    const br=clamp(Math.round(a*0.78),34,50);const ax=R-18-br,bx=ax-2*br-clamp(cw*0.05,12,28);
+    const a=clamp(Math.round(Math.min(cw*0.135,ch*0.25)),46,66);
+    // v4: the D-pad and B each get their own touch area. Margins tighten on narrow phones so there is a real gap,
+    // and y.split (the middle of that gap) is a hard line: left of it is D-pad only, right of it is A/B only.
+    const br=clamp(Math.round(a*0.78),34,50),bg=clamp(cw*0.05,12,28);let ml=22,mr=18;const gap0=cw-ml-3*a-4*br-bg-mr;if(gap0<24){const k=Math.min(10,Math.ceil((24-gap0)/2));ml-=k;mr-=k}
+    y.pad={cx:L+ml+1.5*a,cy:B-ch/2+6,a};const ax=R-mr-br,bx=ax-2*br-bg;
     y.ab={b:{cx:bx,cy:B-ch/2+br*0.55+10,r:br},a:{cx:ax,cy:B-ch/2-br*0.35+4,r:br}};
+    y.split=((y.pad.cx+1.5*a)+(bx-br))/2;
     var fx=L,fy=T+topH,fw=cw,fh=B-ch-fy-4;
   }else{
     const sw=clamp(Math.round(CW*0.2),150,250);
     const a=clamp(Math.round(sw*0.21),44,60);y.pad={cx:L+sw/2,cy:B-12-1.5*a-20,a};
     const br=clamp(Math.round(sw*0.17),32,46);y.ab={a:{cx:R-sw*0.28,cy:B-br-62,r:br},b:{cx:R-sw*0.72,cy:B-br-22,r:br}};
-    y.ctrl=null;var fx=L+sw,fy=T+topH,fw=R-L-2*sw,fh=B-fy-6;
+    y.ctrl=null;y.split=CW/2;var fx=L+sw,fy=T+topH,fw=R-L-2*sw,fh=B-fy-6;
   }
-  S=land?Math.max(1,Math.min(fw/240,fh/200)):Math.max(1,Math.min(fw/(fw<520?180:240),fh/150));VW=Math.floor(Math.min(fw/S,420));VH=Math.floor(Math.min(fh/S,230));
+  S=land?Math.max(1,Math.min(fw/240,fh/200)):Math.max(1,Math.min(fw/(fw<520?150:200),fh/140));VW=Math.floor(Math.min(fw/S,420));VH=Math.floor(Math.min(fh/S,230));
   y.field={x:Math.round(fx+(fw-VW*S)/2),y:Math.round(fy+(fh-VH*S)/2),w:VW*S,h:VH*S};
   off.width=VW;off.height=VH;LY=y;
 }
@@ -193,14 +197,15 @@ function drawPerson(x,y,L,face,ph,act,dir){const kid=L.kid,leg=kid?3:5,tor=kid?6
   else{const H=HEADS[L.style]||HEADS.short;let m=dir==='d'?H.f:H.s;if(dir==='u')m=H.f.map((r,i)=>i<8?r.replace(/[sem]/g,'h'):r);drawMap(m,headPal(L),hx,hy,!front&&face<0)}
 }
 // goblin: small original shadow imp (indigo, big lantern eyes, pointy ears, wispy bottom). No horns, no tail, no pitchfork.
-const GOB=['............','...dddddd...','k.dlllllld.k','kkddlllddd kk','.kdyydddyyk.','..dypddypd..','..dddddddd..','..ddwmmwdd..','...dddddd...','..dd.dd.dd..','..d...d..d..'].map(r=>r.replace(/ /g,'').padEnd(12,'.').slice(0,12));
+// v4: ears moved down to eye level and point out sideways, so nothing at the top of the head can read as horns
+const GOB=['............','...dddddd...','..dlllllld..','..ddlllddd..','kkdyydddyykk','.kdypddypdk.','..dddddddd..','..ddwmmwdd..','...dddddd...','..dd.dd.dd..','..d...d..d..'].map(r=>r.replace(/ /g,'').padEnd(12,'.').slice(0,12));
 const GOBPAL={d:'#3b2a5c',l:'#4d3a78',k:'#5a4688',y:'#d4f25e',p:'#1a1030',w:'#efe6c8',m:'#1a1030'};
 const GOBPAL2={d:'#2e3a5a',l:'#3d4f78',k:'#4a6088',y:'#ffd166',p:'#1a1030',w:'#efe6c8',m:'#1a1030'};
 function drawGoblin(x,y,face,ph,kind,scale=1,alpha=1,flash=0,tint=null){const s=scale;
   o.save();o.globalAlpha=alpha;o.translate(Math.round(x),Math.round(y));if(s!==1)o.scale(s,s);
   // shadow aura
   o.fillStyle='rgba(40,20,70,.35)';for(let i=0;i<5;i++){const a=ph*1.3+i*1.26;o.fillRect(Math.round(-7+Math.cos(a)*7+6),Math.round(-6+Math.sin(a)*4),3,3)}
-  if(kind==='fly'){const w=Math.sin(ph*10)>0?-3:0;px(-11,-9+w,5,2,'#4d3a78');px(-12,-8+w,3,3,'#3b2a5c');px(6,-9+w,5,2,'#4d3a78');px(9,-8+w,3,3,'#3b2a5c')}
+  if(kind==='fly'){const w=Math.sin(ph*10)>0?-2:0;px(-11,-9+w,5,2,'#4d3a78');px(-12,-8+w,3,3,'#3b2a5c');px(6,-9+w,5,2,'#4d3a78');px(9,-8+w,3,3,'#3b2a5c')}
   else{o.fillStyle='rgba(0,0,0,.25)';o.fillRect(-5,0,10,2)}
   const bob=kind==='fly'?Math.round(Math.sin(ph*3)*1.5):(Math.sin(ph*8)>0.4?-2:0);
   {const night=LEVELS[level-1]&&LEVELS[level-1].theme==='night',oc=night?'#b9a6ff':'#1a1030',op={};for(const k in GOBPAL)op[k]=oc;o.globalAlpha=alpha*(night?0.7:0.55);
@@ -230,7 +235,7 @@ const LEVELS=[
   tip:'Top-down! Walk any way. Pray at the dark gloom pits to close them.'},
  {n:'Downtown at Night',type:'side',theme:'night',len:2600,quota:12,people:16,turn:0.3,gobEvery:3.0,gobMax:5,fly:0.45,song:0,
   tip:'The city never sleeps. Keep handing out tracts and keep praying!'},
- {n:'Farmers Market',type:'top',theme:'market',quota:10,people:14,turn:0.3,gloom:4,gobMax:4,boss:true,song:1,
+ {n:'Farmers Market',type:'top',theme:'market',quota:10,people:14,turn:0.22,gloom:4,gobMax:3,pitEvery:8.5,gobSpd:0.85,hearts:4,bossHp:6,bossEvery:6,boss:true,song:1,
   tip:'Hand out 10 tracts, then pray down the Big Grumble at the chapel door!'}];
 const NL=LEVELS.length;
 let W=null; // the current world
@@ -341,7 +346,7 @@ function renderTop(w,Lv,r){const c=lc(w.Wt*TS,w.Ht*TS),x=c.getContext('2d'),mk=L
     P(X,Y+hh*0.45,ww,hh*0.55,h.wall);P(X+ww/2-4,Y+hh-12,8,12,'#7a4a2a');P(X+6,Y+hh-14,8,7,'#8fc4ea');P(X+ww-14,Y+hh-14,8,7,'#8fc4ea');
     P(X-2,Y,ww+4,hh*0.48,h.col);for(let i=0;i<ww+4;i+=6)P(X-2+i,Y+3,3,hh*0.4,'rgba(0,0,0,.12)');P(X-2,Y+hh*0.48-2,ww+4,2,'rgba(0,0,0,.25)')}
   {const ch=w.church,X=ch.x*TS,Y=ch.y*TS,ww=ch.w*TS,hh=ch.h*TS;P(X,Y+20,ww,hh-20,'#f3ead8');P(X-3,Y,ww+6,24,'#b5523b');P(X+ww/2-1,Y+2,2,16,'#e8c34a');P(X+ww/2-5,Y+6,10,2,'#e8c34a');
-    for(const k of [10,ww-20])P(X+k,Y+34,10,22,'#7fb6e8');P(X+ww/2-10,Y+hh-26,20,26,'#7a4a2a');x.fillStyle='#3a2a20';x.font='bold 8px monospace';x.textAlign='center';x.fillText(mk?'GRACE CHAPEL':'HOPE CHURCH',X+ww/2,Y+30)}
+    for(const k of [10,ww-20])P(X+k,Y+34,10,22,'#7fb6e8');P(X+ww/2-10,Y+hh-26,20,26,'#7a4a2a')}  // v4: the sign name is drawn by drawSign() at 16px on the screen canvas
   return c}
 
 // ===================== gameplay =====================
@@ -351,7 +356,7 @@ const SAYS=['Thank you!','God bless!',"I'll read it!",'Wow, thanks!','Amen!','Ho
 const FREE=['I feel free!','Thank you, Jesus!','The gloom is gone!','Praise God!'];
 function Lv(){return LEVELS[level-1]}
 function startLevel(n){level=clamp(n,1,NL);const L=Lv();song=L.song;step=0;W=L.type==='side'?buildSide(L,n*7919+11):buildTop(L,n*7919+11);
-  maxHearts=EASY?5:3;hearts=maxHearts;gobs=[];shots=[];parts=[];floats=[];bossOn=false;boss=null;spawnT=3;exitMsgT=0;levelStartScore=score;
+  maxHearts=EASY?5:(L.hearts||3);hearts=maxHearts;gobs=[];shots=[];parts=[];floats=[];bossOn=false;boss=null;spawnT=3;exitMsgT=0;levelStartScore=score;
   ST={given:0,gobs:0,freed:0,pits:0,gives:0,t:0};
   H=L.type==='side'?{x:40,y:GY,vx:0,vy:0,face:1,dir:'r',onG:true,inv:0,act:0,ph:0,cdA:0,cdB:0,drop:0}:{x:W.start.x,y:W.start.y,face:1,dir:'u',inv:0,act:0,ph:0,cdA:0,cdB:0};
   if(L.type==='top')for(const p of W.people)p.dir=pick(['u','d','l','r']);
@@ -366,15 +371,20 @@ function need(){return Math.max(0,quota()-ST.given)}
 // ---------- actions
 function throwTract(){if(H.cdB>0)return;H.cdB=0.32;H.act=0.25;SFX.tract();ST.gives++;
   const d=dirVec();// hand it straight to someone right next to you
-  let best=null,bd=20;for(const p of W.people){if(p.got)continue;const dx=p.x-H.x,dy=(W.type==='side'?(p.y-H.y):(p.y-H.y));const dd=Math.hypot(dx,dy);if(dd<bd&&(dx*d.x+dy*d.y)>=-2){bd=dd;best=p}}
+  let best=null,bd=32;for(const p of W.people){if(p.got)continue;const dx=p.x-H.x,dy=(W.type==='side'?(p.y-H.y):(p.y-H.y));const dd=Math.hypot(dx,dy);if(dd<bd&&(dx*d.x+dy*d.y)>=-2){bd=dd;best=p}}
   if(best){give(best);return}
   if(W.type==='side')shots.push({k:'tract',x:H.x+H.face*7,y:H.y-14,vx:H.face*150+H.vx*0.3,vy:-70,g:250,life:0.95,ph:0});
   else shots.push({k:'tract',x:H.x+d.x*6,y:H.y-8+d.y*4,vx:d.x*140,vy:d.y*140,g:0,life:0.75,ph:0})}
 function pray(){if(H.cdA>0)return;H.cdA=0.3;SFX.pray();const d=dirVec();
-  if(W.type==='side')shots.push({k:'pray',x:H.x+H.face*8,y:H.y-14,vx:H.face*165,vy:0,life:1.05,ph:0,y0:H.y-14});
+  if(W.type==='side'){prayBurst();let vx=H.face*165,vy=0;const f=sideAim();if(f){const ax=f.x-H.x,ay=(f.y-6)-(H.y-14),n=Math.hypot(ax,ay)||1;vx=ax/n*165;vy=ay/n*165;if(Math.abs(ax)>4)H.face=ax>0?1:-1}
+    shots.push({k:'pray',x:H.x+(f?vx/165*6:H.face*8),y:H.y-14,vx,vy,life:1.05,ph:0,y0:H.y-14})}
   else{let vx=d.x,vy=d.y;const t0=aimAssist(d);if(t0){const ax=t0.x-H.x,ay=(t0.y-(t0.k==='boss'?14:t0.gl?0:6))-(H.y-9),n=Math.hypot(ax,ay)||1;vx=ax/n;vy=ay/n}
     shots.push({k:'pray',x:H.x+vx*6,y:H.y-9+vy*4,vx:vx*160,vy:vy*160,life:0.95,ph:0,aim:!!t0})}
   part(H.x,H.y-22,6,['#fff6c0','#ffe08a','#fff'],{sp:20,up:-25,add:true,life:0.6})}
+// side levels: a flyer close by and above Jim (in front or right overhead) gets the prayer aimed up at it
+function sideAim(){let best=null,bd=1e9;for(const b of gobs){if(b.dying||b.k!=='fly')continue;const dx=b.x-H.x,up=(H.y-14)-(b.y-6);if(up<6||Math.abs(dx)>56||dx*H.face<-14)continue;const d=Math.hypot(dx,up);if(d<bd){bd=d;best=b}}return best}
+// a prayer also sends a small burst of light around Jim: any goblin touching that ring (above his head too) is hit
+function prayBurst(){part(H.x,H.y-16,10,['#fff6c0','#ffe08a','#fff'],{sp:45,add:true,life:0.45});for(const b of gobs){if(b.dying)continue;const cy=b.y-(b.k==='boss'?14:6);if(Math.hypot(b.x-H.x,cy-(H.y-20))<24){b.hp--;b.flash=1;part(b.x,cy,8,['#fff','#ffe08a'],{add:true});if(b.hp<=0)killGob(b);else SFX.tap();return}}}
 // top-down aim assist: lock onto the nearest goblin / gloomy person / gloom pit within a 40° cone (each side) and 120 px
 function aimAssist(d){let best=null,bd=1e9;const c=[...gobs.filter(b=>!b.dying),...W.people.filter(p=>p.st==='trouble'),...W.gloom.filter(p=>p.alive).map(p=>({x:p.x,y:p.y,gl:1}))];
   for(const f of c){const ax=f.x-H.x,ay=f.y-H.y,dist=Math.hypot(ax,ay);if(dist>120||dist<1)continue;const cos=(ax*d.x+ay*d.y)/dist;if(cos<0.766)continue;const sc=dist*(2-cos);if(sc<bd){bd=sc;best=f}}return best}
@@ -405,9 +415,9 @@ function spawnSide(dt){const L=Lv();spawnT-=dt;const alive=gobs.filter(b=>!b.dyi
   const ahead=Math.random()<0.75,x=ahead?camX+VW+14:camX-14;if(x<60||x>W.len-130)return;
   const fly=Math.random()<L.fly;gobs.push({x,y:fly?GY-48-rnd(0,30):GY,k:fly?'fly':'walk',hp:1,ph:rnd(0,6),face:ahead?-1:1,spd:(fly?26:22+level*2.5)*(EASY?0.65:1)*rnd(0.85,1.15),dying:0,flash:0,by:0})}
 function spawnTop(dt){const L=Lv(),alive=gobs.filter(b=>!b.dying&&b.k!=='boss').length,mx=EASY?Math.max(2,L.gobMax-2):L.gobMax;
-  for(const p of W.gloom){if(!p.alive)continue;p.t-=dt;if(p.t>0)continue;p.t=(EASY?9:6.5)*rnd(0.8,1.2);if(alive>=mx)continue;if(Math.hypot(p.x-H.x,p.y-H.y)<34)continue;
-    gobs.push({x:p.x,y:p.y+4,k:'walk',hp:1,ph:rnd(0,6),face:1,spd:(20+level*1.5)*(EASY?0.65:1)*rnd(0.85,1.1),dying:0,flash:0});part(p.x,p.y,8,['#2a1840','#51407a'],{sp:25})}
-  if(boss&&!boss.dying){boss.st=(boss.st||4)-dt;if(boss.st<=0&&alive<3){boss.st=EASY?6:4.5;gobs.push({x:boss.x+rnd(-10,10),y:boss.y+6,k:'walk',hp:1,ph:0,face:1,spd:18*(EASY?0.65:1),dying:0,flash:0})}}}
+  for(const p of W.gloom){if(!p.alive)continue;p.t-=dt;if(p.t>0)continue;p.t=(EASY?9:(L.pitEvery||6.5))*rnd(0.8,1.2);if(alive>=mx)continue;if(Math.hypot(p.x-H.x,p.y-H.y)<34)continue;
+    gobs.push({x:p.x,y:p.y+4,k:'walk',hp:1,ph:rnd(0,6),face:1,spd:(20+level*1.5)*(L.gobSpd||1)*(EASY?0.65:1)*rnd(0.85,1.1),dying:0,flash:0});part(p.x,p.y,8,['#2a1840','#51407a'],{sp:25})}
+  if(boss&&!boss.dying){boss.st=(boss.st||4)-dt;if(boss.st<=0&&alive<3){boss.st=EASY?7:(L.bossEvery||4.5);gobs.push({x:boss.x+rnd(-10,10),y:boss.y+6,k:'walk',hp:1,ph:0,face:1,spd:18*(EASY?0.65:1),dying:0,flash:0})}}}
 function moveTop(e,dx,dy,hw=4,hh=3){let moved=false;if(dx&&boxFree(e.x+dx,e.y,hw,hh)){e.x+=dx;moved=true}if(dy&&boxFree(e.x,e.y+dy,hw,hh)){e.y+=dy;moved=true}return moved}
 // ---------- main update
 function update(dt){t+=dt;if(toastT>0)toastT-=dt;if(shake>0)shake=Math.max(0,shake-dt*20);
@@ -427,14 +437,14 @@ function update(dt){t+=dt;if(toastT>0)toastT-=dt;if(shake>0)shake=Math.max(0,sha
   }else{let dx=(I.r?1:0)-(I.l?1:0),dy=(I.d?1:0)-(I.u?1:0);if(dx||dy){const n=Math.hypot(dx,dy),sp=62*dt;if(Math.abs(dx)>=Math.abs(dy)&&dx)H.dir=dx>0?'r':'l';else if(dy)H.dir=dy>0?'d':'u';if(dx)H.face=dx;
       moveTop(H,dx/n*sp,dy/n*sp);H.ph+=dt*12}
     if(H.kx||H.ky){moveTop(H,H.kx*dt,H.ky*dt);H.kx*=0.85;H.ky*=0.85;if(Math.hypot(H.kx,H.ky)<4)H.kx=H.ky=0}
-    if(level===NL&&need()===0&&!boss){boss={x:W.door.x,y:W.door.y+26,k:'boss',hp:EASY?5:8,ph:0,face:1,spd:11,dying:0,flash:0,st:3};gobs.push(boss);bossOn=true;toast('The Big Grumble blocks the chapel! PRAY!',3);shake=5;SFX.gloom()}
+    if(level===NL&&need()===0&&!boss){boss={x:W.door.x,y:W.door.y+26,k:'boss',hp:EASY?5:(Lv().bossHp||8),ph:0,face:1,spd:11,dying:0,flash:0,st:3};gobs.push(boss);bossOn=true;toast('The Big Grumble blocks the chapel! PRAY!',3);shake=5;SFX.gloom()}
     if(Math.hypot(H.x-W.door.x,H.y-W.door.y)<16){if(need()===0&&!bossOn){levelClear();return}else if(exitMsgT<=0){toast(need()?'Hand out '+need()+' more tract'+(need()>1?'s':'')+' first!':'Pray away the Big Grumble first!',2);SFX.no();exitMsgT=2.2}}}
   exitMsgT-=dt;
   // pickups
   for(const k of W.picks){if(k.got)continue;if(Math.abs(k.x-H.x)<10&&Math.abs(k.y-(H.y-6))<16){k.got=true;if(hearts<maxHearts){hearts++;float(k.x,k.y-10,'+1 ♥','#ff8aa0')}else{score+=50;float(k.x,k.y-10,'+50')}SFX.happy();part(k.x,k.y,12,['#ffe08a','#fff'],{sp:30,add:true})}}
   // projectiles
   for(const s of shots){s.life-=dt;s.ph+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.g){s.vy+=s.g*dt;if(s.y>GY-3){s.y=GY-3;s.vy*=-0.3;s.vx*=0.7}}
-    if(s.k==='pray'){if(side)s.y=s.y0+Math.sin(s.ph*14)*2;if(Math.random()<0.6)parts.push({x:s.x,y:s.y,vx:rnd(-8,8),vy:rnd(-8,8),life:0.35,max:0.35,c:pick(['#fff6c0','#ffe08a']),s:1,g:0,add:true});
+    if(s.k==='pray'){if(side){s.y0+=s.vy*dt;s.y=s.y0+Math.sin(s.ph*14)*2}if(Math.random()<0.6)parts.push({x:s.x,y:s.y,vx:rnd(-8,8),vy:rnd(-8,8),life:0.35,max:0.35,c:pick(['#fff6c0','#ffe08a']),s:1,g:0,add:true});
       if(!side&&s.ph>0.12&&solidAt(s.x,s.y+6)){s.life=0;part(s.x,s.y,6,'#ffe08a',{add:true})}}
     if(s.k==='tract'&&!side&&s.ph>0.12&&solidAt(s.x,s.y+8))s.life=0;
     if(s.life<=0)continue;
@@ -445,9 +455,9 @@ function update(dt){t+=dt;if(toastT>0)toastT-=dt;if(shake>0)shake=Math.max(0,sha
   shots=shots.filter(s=>s.life>0);
   // people
   for(const p of W.people){p.ph+=dt;if(p.bubT>0)p.bubT-=dt;p.t-=dt;
-    if(p.st==='turning'){if(p.t<=0){p.st='trouble';part(p.x,p.y-12,16,['#2a1840','#3b2a5c'],{sp:35})}continue}
-    if(p.st==='trouble'){const sp=(side?20:17)*(EASY?0.6:1)*dt;const dx=H.x-p.x,dy=H.y-p.y,d=Math.hypot(dx,dy)||1;p.face=dx>0?1:-1;
-      if(side)p.x+=Math.sign(dx)*sp;else moveTop(p,dx/d*sp,dy/d*sp);if(Math.abs(dx)<8&&(side?Math.abs(H.y-p.y)<14:Math.abs(dy)<8))hurt(p.x,p.y);continue}
+    if(p.st==='turning'){if(p.t<=0){p.st='trouble';p.grace=1.5;part(p.x,p.y-12,16,['#2a1840','#3b2a5c'],{sp:35})}continue}
+    if(p.st==='trouble'){if(p.grace>0)p.grace-=dt;const sp=(side?20:17)*(EASY?0.6:1)*dt;const dx=H.x-p.x,dy=H.y-p.y,d=Math.hypot(dx,dy)||1;p.face=dx>0?1:-1;
+      if(side)p.x+=Math.sign(dx)*sp;else moveTop(p,dx/d*sp,dy/d*sp);if(!(p.grace>0)&&Math.abs(dx)<8&&(side?Math.abs(H.y-p.y)<14:Math.abs(dy)<8))hurt(p.x,p.y);continue}
     if(p.st==='happy'||p.st==='free'){p.face=H.x<p.x?-1:1;if(p.t<=0)p.st='walk';if(Math.random()<dt*3)parts.push({x:p.x+rnd(-4,4),y:p.y-24,vx:0,vy:-14,life:0.8,max:0.8,c:'#ff6f91',s:2,g:0,heart:1});continue}
     if(p.st==='idle'){if(p.t<=0){p.st='walk';p.t=rnd(2,5)}continue}
     if(side){p.x+=p.face*p.spd*dt*(p.got?0.7:1);if(Math.abs(p.x-p.x0)>p.range){p.face=p.x>p.x0?-1:1}p.x=clamp(p.x,20,W.len-100);if(p.t<=0&&Math.random()<0.3){p.st='idle';p.t=rnd(1,2.5)}else if(p.t<=0)p.t=rnd(2,5)}
@@ -468,8 +478,8 @@ function updParts(dt){for(const p of parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt
 // ===================== input, rendering, screens, loop =====================
 let latch={a:0,b:0,u:0},held={l:0,r:0,u:0,d:0,a:0,b:0},keys={},ptrs=new Map(),edge={a:0,b:0,jump:0},prevH={a:0,b:0,u:0},rep={a:0,b:0};
 function padDirs(x,y){const P=LY.pad,dx=x-P.cx,dy=y-P.cy,o2=[];if(Math.hypot(dx,dy)<P.a*0.3)return o2;const ang=Math.atan2(dy,dx),s8=Math.round(ang/(Math.PI/4));const m={0:['r'],1:['r','d'],2:['d'],3:['l','d'],4:['l'],'-4':['l'],'-3':['l','u'],'-2':['u'],'-1':['r','u']};return m[s8]||[]}
-function onPad(x,y){const P=LY.pad,h=P.a*1.5+16;return Math.abs(x-P.cx)<=h&&Math.abs(y-P.cy)<=h}
-function abAt(x,y){const o2=[];for(const k of ['b','a']){const q=LY.ab[k];if(Math.hypot(x-q.cx,y-q.cy)<=q.r+14)o2.push(k)}if(o2.length>1){const da=Math.hypot(x-LY.ab.a.cx,y-LY.ab.a.cy),db=Math.hypot(x-LY.ab.b.cx,y-LY.ab.b.cy);return [da<db?'a':'b']}return o2}
+function onPad(x,y){const P=LY.pad,h=P.a*1.5+16;return x<LY.split&&Math.abs(x-P.cx)<=h&&Math.abs(y-P.cy)<=h}
+function abAt(x,y){const o2=[];if(x<LY.split)return o2;for(const k of ['b','a']){const q=LY.ab[k];if(Math.hypot(x-q.cx,y-q.cy)<=q.r+14)o2.push(k)}if(o2.length>1){const da=Math.hypot(x-LY.ab.a.cx,y-LY.ab.a.cy),db=Math.hypot(x-LY.ab.b.cx,y-LY.ab.b.cy);return [da<db?'a':'b']}return o2}
 function recompute(){const h={l:0,r:0,u:0,d:0,a:0,b:0};for(const q of ptrs.values()){if(q.pad)for(const k of q.pad)h[k]=1;if(q.ab)for(const k of q.ab)h[k]=1}
   for(const k of ['a','b','u'])if(h[k]&&!held[k])latch[k]=1;
   for(const k in h)if(h[k]&&!held[k]&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}held=h}
@@ -478,13 +488,14 @@ function input(){const k=keys,I={l:held.l||k.ArrowLeft||k.KeyA,r:held.r||k.Arrow
   I.a=LA||A&&(!prevH.a||(rep.a-=dt)<=0);if(I.a)rep.a=0.4;I.b=LB||B&&(!prevH.b||(rep.b-=dt)<=0);if(I.b)rep.b=0.45;I.jump=LU||U&&!prevH.u||(window.__QA&&__QA.jump);
   prevH={a:A,b:B,u:U};if(window.__QA&&__QA.inp)Object.assign(I,__QA.inp);return I}
 function canvasXY(e){return [e.clientX,e.clientY]}
-function hitBtn(x,y){for(let i=menuBtns.length-1;i>=0;i--){const b=menuBtns[i];if(x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h)return b}return null}
+function hitBtn(x,y){for(let i=menuBtns.length-1;i>=0;i--){const b=menuBtns[i];if(b.deco)continue;if(x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h)return b}return null}
 const gameCtl=()=>state==='play'&&!paused&&!helpOpen;
 cv.addEventListener('pointerdown',e=>{e.preventDefault();initAudio();if(AC&&AC.state==='suspended')AC.resume();const [x,y]=canvasXY(e);
   const b=hitBtn(x,y);if(b){pressBtn=b.id;ptrs.set(e.pointerId,{btn:b.id});return}
+  if(helpOpen&&HELPBOX&&x>=HELPBOX.x&&x<=HELPBOX.x+HELPBOX.w&&y>=HELPBOX.y&&y<=HELPBOX.y+HELPBOX.h){ptrs.set(e.pointerId,{hs:y,s0:helpScroll});return}
   if(gameCtl()){if(onPad(x,y)){ptrs.set(e.pointerId,{pad:padDirs(x,y)});recompute();return}const ab=abAt(x,y);if(ab.length){ptrs.set(e.pointerId,{ab});recompute();return}}
   ptrs.set(e.pointerId,{none:1})},{passive:false});
-cv.addEventListener('pointermove',e=>{const q=ptrs.get(e.pointerId);if(!q)return;const [x,y]=canvasXY(e);if(q.pad){const d=padDirs(x,y);if(d.join()!==q.pad.join()){q.pad=d;recompute()}}
+cv.addEventListener('pointermove',e=>{const q=ptrs.get(e.pointerId);if(!q)return;const [x,y]=canvasXY(e);if(q.hs!==undefined){helpScroll=q.s0-(y-q.hs);return}if(q.pad){const d=padDirs(x,y);if(d.join()!==q.pad.join()){q.pad=d;recompute()}}
   else if(q.btn){const b=hitBtn(x,y);pressBtn=b&&b.id===q.btn?q.btn:null}},{passive:true});
 function ptrEnd(e){const q=ptrs.get(e.pointerId);if(!q)return;ptrs.delete(e.pointerId);if(q.btn){const [x,y]=canvasXY(e);const b=hitBtn(x,y);pressBtn=null;if(b&&b.id===q.btn&&e.type==='pointerup'){SFX.tap();b.fn()}}recompute()}
 ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>cv.addEventListener(ev,ptrEnd));
@@ -493,6 +504,7 @@ addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;in
   if(e.code==='KeyP'||e.code==='Escape'){if(state==='play')paused=!paused}if(e.code==='KeyM')setMute(!muted);
   if(e.code==='Enter'||((e.code==='KeyZ'||e.code==='KeyX')&&!e.repeat&&state!=='play')){const b=menuBtns.find(q=>q.primary);if(b)b.fn()}});
 addEventListener('keyup',e=>{keys[e.code]=0});
+cv.addEventListener('wheel',e=>{if(helpOpen){helpScroll+=e.deltaY;e.preventDefault()}},{passive:false});
 // ---------- world rendering
 function drawWorld(){const side=W.type==='side';const cx=Math.round(camX+(shake?rnd(-shake,shake)*0.4:0)),cy=Math.round(camY+(shake?rnd(-shake,shake)*0.4:0));
   if(side){drawSideBG(cx,cy);drawGround(cx,cy);for(const d of W.decor)drawDecor(d,cx,cy);drawChurch(W.len-90-cx,GY-cy,need()===0)}
@@ -522,6 +534,7 @@ function drawController(){const C=LY.ctrl,P=LY.pad,a=P.a,side=W&&W.type==='side'
   for(const k in arr){const [ux,uy]=arr[k],x=P.cx+ux*a,y=P.cy+uy*a;if(lit[k]){g.fillStyle='#e8c34a';g.fillRect(x-a/2+3,y-a/2+3,a-6,a-6)}
     g.fillStyle=lit[k]?'#121016':'#77748a';g.beginPath();const s=a*0.22;if(k==='u'){g.moveTo(x,y-s);g.lineTo(x-s,y+s*0.7);g.lineTo(x+s,y+s*0.7)}else if(k==='d'){g.moveTo(x,y+s);g.lineTo(x-s,y-s*0.7);g.lineTo(x+s,y-s*0.7)}else if(k==='l'){g.moveTo(x-s,y);g.lineTo(x+s*0.7,y-s);g.lineTo(x+s*0.7,y+s)}else{g.moveTo(x+s,y);g.lineTo(x-s*0.7,y-s);g.lineTo(x-s*0.7,y+s)}g.fill()}
   g.fillStyle='#24212b';g.beginPath();g.arc(P.cx,P.cy,a*0.28,0,7);g.fill();
+  if(state==='title'){const h=a*1.5+8;menuBtns.push({id:'ctl_pad',deco:1,x:P.cx-h,y:P.cy-h,w:2*h,h:2*h,fn(){}});for(const k of ['a','b']){const q=LY.ab[k];menuBtns.push({id:'ctl_'+k,deco:1,x:q.cx-q.r-6,y:q.cy-q.r-6,w:2*q.r+12,h:2*q.r+34,fn(){}})}}
   if(side!==undefined&&state==='play'){const lx=P.cx+a*0.62,fs=16;if(side){txt('JUMP',lx+a*0.15,P.cy-a*1.25,fs,'#fff','left',{st:0})}else txt('WALK',lx+a*0.15,P.cy-a*1.25,fs,'#fff','left',{st:0})}
   for(const k of ['b','a']){const q=LY.ab[k],on=held[k],dy=on?3:0;g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowOffsetY=on?1:5;g.beginPath();g.arc(q.cx,q.cy+dy,q.r,0,7);g.fillStyle=k==='a'?'#f2c230':'#d8343f';g.fill();g.restore();
     g.beginPath();g.arc(q.cx-q.r*0.3,q.cy+dy-q.r*0.35,q.r*0.22,0,7);g.fillStyle='rgba(255,255,255,.35)';g.fill();txt(k.toUpperCase(),q.cx,q.cy+dy+1,Math.round(q.r*0.8),k==='a'?'#4a3200':'#fff','center',{st:0});
@@ -531,12 +544,13 @@ function heartIcon(x,y,s,full){g.fillStyle=full?'#ff5c7a':'rgba(255,255,255,.25)
 function drawHUD(){const T=LY.top,L=LY.land;g.fillStyle='#120c2a';g.fillRect(0,0,CW,T.y+T.h);
   const x0=T.x+10;txt('SCORE '+String(score).padStart(6,'0'),x0,T.y+26,18,'#ffe14a','left',{f:PIX,st:0});
   const y2=L?T.y+26:T.y+70;let hx=L?x0+190:x0+12;for(let i=0;i<maxHearts;i++)heartIcon(hx+i*24,y2-10,20,i<hearts);
-  const tx=L?hx+maxHearts*24+14:hx+maxHearts*24+10;const tr=ST?`📜 ${ST.given}/${quota()}`:'';txt(tr,tx,y2,18,need()===0?'#7dffb0':'#fff','left',{st:0});
-  if(!L||CW>900){const nm='L'+level+' '+Lv().n;const xx=L?tx+90:tx+86;const room=(L?LY.tb[2].x-10:T.x+T.w-8)-xx;if(room>60){const sz=fitSize(nm,room,17,16);g.font='bold '+sz+'px '+FONT;let s=nm;while(g.measureText(s).width>room&&s.length>4)s=s.slice(0,-2)+'…';txt(s,xx,y2,sz,'#c9b8ff','left',{st:0})}}}
+  const tx=L?hx+maxHearts*24+14:hx+maxHearts*24+10;const tr=ST?`📜 ${Math.min(ST.given,quota())}/${quota()}`:'';txt(tr,tx,y2,18,need()===0?'#7dffb0':'#fff','left',{st:0});
+  {const nm='L'+level+' '+Lv().n;const xx=L?tx+90:tx+86;const room=(L?LY.tb[2].x-10:T.x+T.w-8)-xx;if(room>60){const sz=fitSize(nm,room,17,16);g.font='bold '+sz+'px '+FONT;let s=nm;while(g.measureText(s).width>room&&s.length>4)s=s.slice(0,-2)+'…';txt(s,xx,y2,sz,'#c9b8ff','left',{st:0})}}}
 function drawTopBtns(){for(const b of LY.tb){if(b.k==='pause'&&state!=='play')continue;const lbl=b.k==='help'?'?':b.k==='mute'?(muted?'🔇':'🔊'):(paused?'▶':'❚❚');
   rr(b.x,b.y,b.w,b.h,22);g.fillStyle=pressBtn==='tb_'+b.k?'#4a3f88':'#2a2160';g.fill();g.lineWidth=2;g.strokeStyle='#fff';g.stroke();txt(lbl,b.x+b.w/2,b.y+b.h/2+1,b.k==='help'?22:18,'#fff','center',{st:0});
   menuBtns.push({id:'tb_'+b.k,x:b.x,y:b.y,w:b.w,h:b.h,fn:()=>{if(b.k==='help')helpOpen=!helpOpen;else if(b.k==='mute')setMute(!muted);else paused=!paused}})}}
 function drawFloats(){const F=LY.field;g.save();g.beginPath();g.rect(F.x,F.y,F.w,F.h);g.clip();const placed=[];
+  if(H&&state==='play'){const [jx,jy]=worldToScreen(H.x-8,H.y-27);placed.push({x:jx,y:jy,w:16*S,h:28*S})}
   const fit=(x,y,w,h)=>{let yy=y;for(let k=0;k<12;k++){const hit=placed.find(r=>x<r.x+r.w&&x+w>r.x&&yy<r.y+r.h&&yy+h>r.y);if(!hit)break;yy=hit.y-h-3}placed.push({x,y:yy,w,h});return yy};
   const bs=W.people.filter(p=>p.bubT>0&&p.bub).sort((a,b)=>b.y-a.y||a.x-b.x);
   for(const p of bs){const [x,y]=worldToScreen(p.x,p.y-(p.look.kid?30:36));g.font='bold 16px '+FONT;const w=g.measureText(p.bub).width+16;const bx=clamp(x-w/2,F.x+4,F.x+F.w-w-4);const by=fit(bx,y-30,w,28);
@@ -577,30 +591,52 @@ function drawIntro(){const c=centerCol(),F=c.F,L=Lv();const lines=wrap(L.tip,c.w
 function drawPause(){const c=centerCol(),F=c.F,y0=F.y+F.h/2-110;panel(c.x-8,y0,c.w+16,220);txt('PAUSED',CW/2,y0+34,26,'#ffe14a');
   button('resume',c.x+10,y0+64,c.w-20,50,'▶ RESUME','#1f9d55',()=>{paused=false},20);menuBtns[menuBtns.length-1].primary=1;
   button('quit',c.x+10,y0+126,c.w-20,50,'🏠 TITLE','#45405e',()=>{paused=false;state='title'},20)}
-function tally(y0,c){const rows=[['📜 Tracts given',ST.given],['✨ Goblins sent away',ST.gobs],['🙏 People set free',ST.freed]];if(W.type==='top')rows.push(['🕳 Gloom pits closed',ST.pits]);if(ST.bonus)rows.push(['❤️ Level bonus','+'+ST.bonus]);
-  rows.forEach((r,i)=>{txt(r[0],c.x+14,y0+i*27,17,'#fff','left',{st:0});txt(String(r[1]),c.x+c.w-14,y0+i*27,17,'#ffe14a','right',{st:0})});return rows.length*27}
-function drawClear(){const c=centerCol(),F=c.F,h=330,y0=F.y+Math.max(6,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('LEVEL CLEAR!',CW/2,y0+32,28,'#7dffb0');txt(Lv().n,CW/2,y0+62,17,'#c9b8ff');
-  tally(y0+96,c);txt('SCORE '+score,CW/2,y0+h-112,20,'#ffe14a','center',{f:PIX});
-  button('next',c.x+10,y0+h-90,c.w-20,48,'NEXT LEVEL ▶','#1f9d55',()=>{startLevel(level+1)},20);menuBtns[menuBtns.length-1].primary=1;
-  button('ttl',c.x+10,y0+h-38-6,c.w-20,40,'🏠 TITLE','#45405e',()=>{state='title'},18)}
-function drawOver(){const c=centerCol(),F=c.F,h=250,y0=F.y+Math.max(6,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('OUT OF HEARTS',CW/2,y0+32,26,'#ff8aa0');
-  const l=wrap("Don't give up! Every tract you gave still counts.",c.w-10,17);l.forEach((s,i)=>txt(s,CW/2,y0+64+i*22,17,'#fff'));txt('SCORE '+score,CW/2,y0+64+l.length*22+14,20,'#ffe14a','center',{f:PIX});
-  button('retry',c.x+10,y0+h-104,c.w-20,48,'↻ TRY LEVEL '+level+' AGAIN','#1f9d55',()=>{score=levelStartScore;startLevel(level)},19);menuBtns[menuBtns.length-1].primary=1;
-  button('ttl2',c.x+10,y0+h-50,c.w-20,42,'🏠 TITLE','#45405e',()=>{state='title'},18)}
-function drawWin(){const c=centerCol(),F=c.F,h=Math.min(F.h-10,380),y0=F.y+Math.max(4,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('WELL DONE, JIM!',CW/2,y0+32,fitSize('WELL DONE, JIM!',c.w-10,27),'#7dffb0');
-  const l=wrap('"How beautiful are the feet of them that preach the gospel of peace" (Romans 10:15)',c.w-16,16);l.forEach((s,i)=>txt(s,CW/2,y0+62+i*21,16,'#d9f7ff'));
-  const yy=y0+70+l.length*21;tally(yy,c);txt('FINAL SCORE '+score,CW/2,y0+h-82,21,'#ffe14a','center',{f:PIX});
-  button('again',c.x+10,y0+h-62,c.w/2-15,48,'↻ AGAIN','#1f9d55',()=>{score=0;newGame(1)},19);menuBtns[menuBtns.length-1].primary=1;button('ttl3',c.x+c.w/2+5,y0+h-62,c.w/2-15,48,'🏠 TITLE','#45405e',()=>{state='title'},19)}
+function tallyRows(){const rows=[['📜 Tracts given',Math.min(ST.given,quota())],['✨ Goblins sent away',ST.gobs],['🙏 People set free',ST.freed]];if(W.type==='top')rows.push(['🕳 Gloom pits closed',ST.pits]);if(ST.bonus)rows.push(['❤️ Level bonus','+'+ST.bonus]);return rows}
+function tally(y0,c,rh=27){const rows=tallyRows();
+  rows.forEach((r,i)=>{txt(r[0],c.x+14,y0+i*rh,17,'#fff','left',{st:0});txt(String(r[1]),c.x+c.w-14,y0+i*rh,17,'#ffe14a','right',{st:0})});return rows.length*rh}
+// v4: result cards are laid out top to bottom from their content (no fixed heights), so nothing overlaps in landscape
+function wideCol(){const F=LY.field,w=Math.min(F.w-24,LY.land?470:360);return {x:F.x+(F.w-w)/2,w,F}}
+function btnPair(c,y,id1,l1,c1,f1,id2,l2,c2,f2,side){if(side){button(id1,c.x+10,y,c.w*0.58-15,48,l1,c1,f1,19);menuBtns[menuBtns.length-1].primary=1;button(id2,c.x+c.w*0.58+5,y,c.w*0.42-15,48,l2,c2,f2,18);return 48}
+  button(id1,c.x+10,y,c.w-20,48,l1,c1,f1,20);menuBtns[menuBtns.length-1].primary=1;button(id2,c.x+10,y+56,c.w-20,48,l2,c2,f2,18);return 104}
+function drawClear(){const c=wideCol(),F=c.F,n=tallyRows().length,tight=F.h<380,rh=tight?24:27,side=LY.land&&c.w>=400;
+  const h=(tight?52:62)+(tight?26:32)+n*rh+18+(side?48:104)+14,y0=F.y+Math.max(6,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);
+  let y=y0+(tight?26:32);txt('LEVEL CLEAR!',CW/2,y,tight?24:28,'#7dffb0');y+=tight?26:30;txt(Lv().n,CW/2,y,17,'#c9b8ff');y+=tight?26:32;
+  tally(y,c,rh);y+=n*rh;txt('SCORE '+score,CW/2,y,20,'#ffe14a','center',{f:PIX});y+=18;
+  btnPair(c,y,'next','NEXT LEVEL ▶','#1f9d55',()=>{startLevel(level+1)},'ttl','🏠 TITLE','#45405e',()=>{state='title'},side)}
+function drawOver(){const c=wideCol(),F=c.F,side=LY.land&&c.w>=400;const l=wrap("Don't give up! Every tract you gave still counts.",c.w-10,17);const h=58+l.length*22+26+(side?48:104)+14,y0=F.y+Math.max(6,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);txt('OUT OF HEARTS',CW/2,y0+30,26,'#ff8aa0');
+  let y=y0+58;l.forEach((s,i)=>txt(s,CW/2,y+i*22,17,'#fff'));y+=l.length*22+6;txt('SCORE '+score,CW/2,y,20,'#ffe14a','center',{f:PIX});y+=20;
+  btnPair(c,y,'retry','↻ TRY LEVEL '+level+' AGAIN','#1f9d55',()=>{score=levelStartScore;startLevel(level)},'ttl2','🏠 TITLE','#45405e',()=>{state='title'},side)}
+function drawWin(){const c=wideCol(),F=c.F,n=tallyRows().length;const l=wrap('"How beautiful are the feet of them that preach the gospel of peace" (Romans 10:15)',c.w-16,16);
+  const tight=F.h<400,rh=tight?23:27,lh=tight?19:21;const h=(tight?50:58)+l.length*lh+8+n*rh+10+24+48+14,y0=F.y+Math.max(4,(F.h-h)/2);panel(c.x-8,y0,c.w+16,h);
+  let y=y0+(tight?24:32);txt('WELL DONE, JIM!',CW/2,y,fitSize('WELL DONE, JIM!',c.w-10,tight?24:27),'#7dffb0');y+=tight?28:30;
+  l.forEach((s,i)=>txt(s,CW/2,y+i*lh,16,'#d9f7ff'));y+=l.length*lh+8;tally(y,c,rh);y+=n*rh;
+  txt('FINAL SCORE '+score,CW/2,y+2,21,'#ffe14a','center',{f:PIX});y+=22;
+  button('again',c.x+10,y,c.w/2-15,48,'↻ AGAIN','#1f9d55',()=>{score=0;newGame(1)},19);menuBtns[menuBtns.length-1].primary=1;button('ttl3',c.x+c.w/2+5,y,c.w/2-15,48,'🏠 TITLE','#45405e',()=>{state='title'},19)}
 const HELP=[['GOAL','Help Jim walk around, hand out Bible tracts to people, and pray away the little gloom goblins. Hand out enough tracts, then go to the church to finish the level.'],
  ['D-PAD','◀ ▶ walk. Side levels: ▲ jumps, ▼ drops off a bench. Top-down levels: walk any way.'],
  ['B = TRACT','Hands a tract to someone close, or tosses one to them. Happy people give +100.'],
  ['A = PRAY','Sends a glowing prayer of light. Goblins dissolve into light (+50).'],
+ ['WATCH OUT','Goblins and gloomy people take a heart if they touch Jim. Step away or jump, then pray.'],
+ ['FLYING GOBLINS','If one hovers over Jim, press A: the prayer rises to reach it. Or step aside to dodge it.'],
  ['GLOOMY PEOPLE','Sometimes a person turns gloomy when you hand them a tract. Pray for them to set them free (+300)! It never hurts them.'],
  ['MORE','Gloom pits (top-down): pray 3 times to close (+200). Bread gives back a heart. Keys: arrows, Z = tract, X = pray, P pause.']];
-function drawHelp(){const F=LY.field,w=Math.min(CW-20,440),x=(CW-w)/2;let lines=[];for(const [h,b] of HELP){lines.push([h,1]);for(const l of wrap(b,w-30,16))lines.push([l,0])}
-  const top=LY.top.y+LY.top.h+4,maxH=CH-top-10-SAFE.b,h=Math.min(maxH,lines.length*21+110),y0=top+(maxH-h)/2;panel(x,y0,w,h);txt('HOW TO PLAY',CW/2,y0+26,22,'#ffe14a');
-  let y=y0+56;g.save();g.beginPath();g.rect(x,y0+40,w,h-104);g.clip();for(const [l,hd] of lines){txt(l,x+15,y,hd?17:16,hd?'#ffcf4a':'#fff','left',{st:0});y+=21}g.restore();
-  button('closehelp',x+20,y0+h-58,w-40,48,'GOT IT!','#1f9d55',()=>{helpOpen=false},20);menuBtns[menuBtns.length-1].primary=1}
+let helpScroll=0,HELPBOX=null;
+// v4: How To Play scrolls (drag, mouse wheel or the ▲ ▼ buttons) and uses two columns when the screen is wide and short
+function drawHelp(){const top=LY.top.y+LY.top.h+4,maxH=CH-top-10-SAFE.b,two=LY.land&&CW>=640,w=Math.min(CW-20,two?Math.min(CW-20,800):440),x=(CW-w)/2;
+  const colW=two?(w-30-16)/2:w-30;const blocks=HELP.map(([h,b])=>[[h,1],...wrap(b,colW,16).map(l=>[l,0])]);
+  let cols=[[]];if(two){const tot=blocks.reduce((n,b)=>n+b.length,0);let n=0;for(const bk of blocks){if(cols.length===1&&n>0&&n+bk.length/2>tot/2)cols.push([]);cols[cols.length-1].push(...bk);n+=bk.length}}else cols[0]=blocks.flat();
+  const LH=21,contentH=Math.max(...cols.map(c=>c.length))*LH+6,h=Math.min(maxH,contentH+110),y0=top+(maxH-h)/2;panel(x,y0,w,h);txt('HOW TO PLAY',CW/2,y0+26,22,'#ffe14a');
+  const vy=y0+44,vh=h-44-66,maxS=Math.max(0,contentH-vh);helpScroll=clamp(helpScroll,0,maxS);HELPBOX={x,y:vy,w,h:vh};
+  g.save();g.beginPath();g.rect(x,vy,w,vh);g.clip();cols.forEach((col,ci)=>{let y=vy+12-helpScroll;const cx=x+15+ci*(colW+16);for(const [l,hd] of col){if(y>vy-14&&y<vy+vh+14)txt(l,cx,y,hd?17:16,hd?'#ffcf4a':'#fff','left',{st:0});y+=LH}});g.restore();
+  if(maxS>0){const bw=44,bx=x+w-bw-8;g.fillStyle='rgba(255,255,255,.18)';g.fillRect(x+w-5,vy+4+(vh-8)*helpScroll/(contentH),3,Math.max(18,(vh-8)*vh/contentH));
+    button('hup',bx,y0+h-58,bw,48,'▲',helpScroll>0?'#3a5fcf':'#45405e',()=>{helpScroll-=vh*0.7},20);button('hdn',x+8,y0+h-58,bw,48,'▼',helpScroll<maxS?'#3a5fcf':'#45405e',()=>{helpScroll+=vh*0.7},20);
+    if(helpScroll<maxS-2)txt('▼ more — drag to scroll',CW/2,vy+vh-10,16,'#9ff7ff','center')}
+  const bl=maxS>0?x+60:x+20,bw2=maxS>0?w-120:w-40;
+  button('closehelp',bl,y0+h-58,bw2,48,'GOT IT!','#1f9d55',()=>{helpOpen=false;helpScroll=0},20);menuBtns[menuBtns.length-1].primary=1}
+// chapel sign label (top-down levels): drawn on the screen canvas at 16px so it stays readable at any scale
+function drawSign(){if(!W||W.type!=='top'||!W.church)return;const ch=W.church,F=LY.field;const [sx,sy]=worldToScreen((ch.x+ch.w/2)*TS,ch.y*TS+30);
+  const mk=Lv().theme==='market',s=mk?'GRACE CHAPEL':'HOPE CHURCH';g.save();g.beginPath();g.rect(F.x,F.y,F.w,F.h);g.clip();g.font='bold 16px '+FONT;const tw=g.measureText(s).width+12;
+  rr(sx-tw/2,sy-12,tw,22,5);g.fillStyle='#f3ead8';g.fill();g.lineWidth=2;g.strokeStyle='#7a4a2a';g.stroke();txt(s,sx,sy-1,16,'#3a2a20','center',{st:0});g.restore()}
 // ---------- frame
 let lastT=performance.now();
 function frame(now){const dt=Math.min(0.05,(now-lastT)/1000);lastT=now;
@@ -609,6 +645,7 @@ function render(){menuBtns=[];BTN=menuBtns;g.setTransform(DPR,0,0,DPR,0,0);g.ima
   if(!W)startLevel(1),state='title';
   if(state==='title'){titleDemo()}
   o.imageSmoothingEnabled=false;drawWorld();const F=LY.field;g.drawImage(off,0,0,VW,VH,F.x,F.y,F.w,F.h);g.lineWidth=3;g.strokeStyle='#4a3f88';g.strokeRect(F.x-1.5,F.y-1.5,F.w+3,F.h+3);
+  if(state!=='title')drawSign();
   if(state==='play'||state==='intro')drawFloats();
   if(state!=='title')drawHUD();
   drawController();
