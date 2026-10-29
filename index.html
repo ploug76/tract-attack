@@ -973,4 +973,27 @@ window.PALB=api})();
 #palbTabs button{min-height:48px!important;font-size:16px!important}
 #palbList li{min-height:30px;height:auto!important;font-size:16px!important}
 </style>
+<!-- gamepad:start -->
+<script src="gamepad.js?v=2"></script>
+<script>
+try{HELP.push(['CONTROLLER','Xbox, PlayStation or Switch controllers work (USB or Bluetooth, on a computer or paired to your phone). Left stick or D-pad: walk (up jumps on side levels; RB jumps too). A: PRAY. B or X: TRACT. Y: PRAY. Start: pause. Select: sound on/off. Menus: D-pad to pick, A to select, B to go back.'])}catch(e){}
+GamepadSupport.init({
+ keys:{left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',a:'KeyX',y:'KeyX',b:'KeyZ',x:'KeyZ',rb:'Space',rt:'Space',start:'KeyP',back:'KeyM'},
+ noRepeat:['start','back','rb','rt'],
+ repeat:false,
+ ignoreSel:'#dock,#mute,#inst,#ios,.tb,#dockHint',
+ menu:function(){return !!document.querySelector('#palbOv.on,#smpLock.on')||state!=='play'||paused||helpOpen;},
+ items:GamepadSupport.list(function(){return document.querySelector('#palbOv.on,#smpLock.on')?[]:menuBtns.filter(function(b){return !b.deco&&(!helpOpen||/^(hup|hdn|closehelp|tb_)/.test(b.id))&&!(levelPick&&/^(play|levels|how|easy|music)$/.test(b.id))});},{scale:1}),
+ isPaused:function(){return paused},
+ pause:function(){if(state==='play'&&!paused)paused=true},
+ back:function(){if(document.querySelector('#palbOv.on,#smpLock.on'))return false;
+  if(helpOpen){helpOpen=false;return true}
+  if(levelPick){levelPick=false;return true}
+  if(state==='play'&&paused){paused=false;return true}
+  var b=menuBtns.find(function(q){return /back|close/i.test(q.id)});if(b){b.fn();return true}
+  return true;},
+ hint:{text:'🎮 Controller: stick to walk · A pray · B/X tract · RB jump · Start pause',when:function(){return state==='title'&&!levelPick&&!helpOpen&&!document.querySelector('#palbOv.on,#smpLock.on')}}
+});
+</script>
+<!-- gamepad:end -->
 </body></html>
