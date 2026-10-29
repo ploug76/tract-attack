@@ -46,8 +46,8 @@ function layout(){
   if(!land){
     const ch=clamp(Math.round((B-T)*0.30),206,300),cw=R-L;y.ctrl={x:L,y:B-ch,w:cw,h:ch};
     const a=clamp(Math.round(Math.min(cw*0.135,ch*0.25)),46,66);
-    // v4: the D-pad and B each get their own touch area. Margins tighten on narrow phones so there is a real gap,
-    // and y.split (the middle of that gap) is a hard line: left of it is D-pad only, right of it is A/B only.
+    // v4: margins tighten on narrow phones so there is a real gap; y.split is a hard line: A/B only work right of it.
+    // 10/28 (Peter): no D-pad. Swipe anywhere (outside A/B) to walk; y.pad is only where the swipe hint is drawn.
     const br=clamp(Math.round(a*0.78),34,50),bg=clamp(cw*0.05,12,28);let ml=22,mr=18;const gap0=cw-ml-3*a-4*br-bg-mr;if(gap0<24){const k=Math.min(10,Math.ceil((24-gap0)/2));ml-=k;mr-=k}
     y.pad={cx:L+ml+1.5*a,cy:B-ch/2+6,a};const ax=R-mr-br,bx=ax-2*br-bg;
     y.ab={b:{cx:bx,cy:B-ch/2+br*0.55+10,r:br},a:{cx:ax,cy:B-ch/2-br*0.35+4,r:br}};
@@ -239,7 +239,7 @@ function drawHeart(x,y,c='#ff5c7a'){px(x+1,y,2,1,c);px(x+4,y,2,1,c);px(x,y+1,7,2
 const GY=200,TS=16;
 const LEVELS=[
  {n:'Main Street Morning',type:'side',theme:'street',len:1800,quota:7,people:11,turn:0.18,gobEvery:4.4,gobMax:3,fly:0,song:0,
-  tip:'Walk with ◀ ▶, jump with ▲. Press B to hand out a tract and A to pray.'},
+  tip:'Swipe ◀ ▶ to walk, swipe ▲ to jump. Press B to hand out a tract and A to pray.'},
  {n:'Sunny Park',type:'side',theme:'park',len:2200,quota:9,people:13,turn:0.25,gobEvery:3.6,gobMax:4,fly:0.35,song:1,
   tip:'Flying goblins swoop down. Jump onto benches and send prayers!'},
  {n:'Neighborhood Walk',type:'top',theme:'hood',quota:8,people:12,turn:0.25,gloom:3,gobMax:3,song:2,
@@ -488,10 +488,10 @@ function updParts(dt){for(const p of parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt
 
 // ===================== input, rendering, screens, loop =====================
 let latch={a:0,b:0,u:0},held={l:0,r:0,u:0,d:0,a:0,b:0},keys={},ptrs=new Map(),edge={a:0,b:0,jump:0},prevH={a:0,b:0,u:0},rep={a:0,b:0};
-function padDirs(x,y){const P=LY.pad,dx=x-P.cx,dy=y-P.cy,o2=[];if(Math.hypot(dx,dy)<P.a*0.3)return o2;const ang=Math.atan2(dy,dx),s8=Math.round(ang/(Math.PI/4));const m={0:['r'],1:['r','d'],2:['d'],3:['l','d'],4:['l'],'-4':['l'],'-3':['l','u'],'-2':['u'],'-1':['r','u']};return m[s8]||[]}
-function onPad(x,y){const P=LY.pad,h=P.a*1.5+16;return x<LY.split&&Math.abs(x-P.cx)<=h&&Math.abs(y-P.cy)<=h}
+// swipe anywhere to walk: the finger's direction from where it touched down is held while the finger stays down; lift to stop
+function swDirs(dx,dy){const d=Math.hypot(dx,dy),o2=[];if(d<14)return o2;const ang=Math.atan2(dy,dx),s8=Math.round(ang/(Math.PI/4));const m={0:['r'],1:['r','d'],2:['d'],3:['l','d'],4:['l'],'-4':['l'],'-3':['l','u'],'-2':['u'],'-1':['r','u']};return m[s8]||[]}
 function abAt(x,y){const o2=[];if(x<LY.split)return o2;for(const k of ['b','a']){const q=LY.ab[k];if(Math.hypot(x-q.cx,y-q.cy)<=q.r+14)o2.push(k)}if(o2.length>1){const da=Math.hypot(x-LY.ab.a.cx,y-LY.ab.a.cy),db=Math.hypot(x-LY.ab.b.cx,y-LY.ab.b.cy);return [da<db?'a':'b']}return o2}
-function recompute(){const h={l:0,r:0,u:0,d:0,a:0,b:0};for(const q of ptrs.values()){if(q.pad)for(const k of q.pad)h[k]=1;if(q.ab)for(const k of q.ab)h[k]=1}
+function recompute(){const h={l:0,r:0,u:0,d:0,a:0,b:0};for(const q of ptrs.values()){if(q.sw)for(const k of q.sw)h[k]=1;if(q.ab)for(const k of q.ab)h[k]=1}
   for(const k of ['a','b','u'])if(h[k]&&!held[k])latch[k]=1;
   for(const k in h)if(h[k]&&!held[k]&&navigator.vibrate)try{navigator.vibrate(8)}catch(e){}held=h}
 function input(){const k=keys,I={l:held.l||k.ArrowLeft||k.KeyA,r:held.r||k.ArrowRight||k.KeyD,u:held.u||k.ArrowUp||k.KeyW,d:held.d||k.ArrowDown||k.KeyS};
@@ -504,9 +504,9 @@ const gameCtl=()=>state==='play'&&!paused&&!helpOpen;
 cv.addEventListener('pointerdown',e=>{e.preventDefault();initAudio();if(AC&&AC.state==='suspended')AC.resume();const [x,y]=canvasXY(e);
   const b=hitBtn(x,y);if(b){pressBtn=b.id;ptrs.set(e.pointerId,{btn:b.id});return}
   if(helpOpen&&HELPBOX&&x>=HELPBOX.x&&x<=HELPBOX.x+HELPBOX.w&&y>=HELPBOX.y&&y<=HELPBOX.y+HELPBOX.h){ptrs.set(e.pointerId,{hs:y,s0:helpScroll});return}
-  if(gameCtl()){if(onPad(x,y)){ptrs.set(e.pointerId,{pad:padDirs(x,y)});recompute();return}const ab=abAt(x,y);if(ab.length){ptrs.set(e.pointerId,{ab});recompute();return}}
+  if(gameCtl()){const ab=abAt(x,y);if(ab.length){ptrs.set(e.pointerId,{ab});recompute();return}try{cv.setPointerCapture(e.pointerId)}catch(_){}ptrs.set(e.pointerId,{x0:x,y0:y,sw:[]});return}
   ptrs.set(e.pointerId,{none:1})},{passive:false});
-cv.addEventListener('pointermove',e=>{const q=ptrs.get(e.pointerId);if(!q)return;const [x,y]=canvasXY(e);if(q.hs!==undefined){helpScroll=q.s0-(y-q.hs);return}if(q.pad){const d=padDirs(x,y);if(d.join()!==q.pad.join()){q.pad=d;recompute()}}
+cv.addEventListener('pointermove',e=>{const q=ptrs.get(e.pointerId);if(!q)return;const [x,y]=canvasXY(e);if(q.hs!==undefined){helpScroll=q.s0-(y-q.hs);return}if(q.sw){const dx=x-q.x0,dy=y-q.y0,dd=Math.hypot(dx,dy);const d=swDirs(dx,dy);if(dd>44){q.x0=x-dx/dd*44;q.y0=y-dy/dd*44}if(d.join()!==q.sw.join()){q.sw=d;recompute()}}
   else if(q.btn){const b=hitBtn(x,y);pressBtn=b&&b.id===q.btn?q.btn:null}},{passive:true});
 function ptrEnd(e){const q=ptrs.get(e.pointerId);if(!q)return;ptrs.delete(e.pointerId);if(q.btn){const [x,y]=canvasXY(e);const b=hitBtn(x,y);pressBtn=null;if(b&&b.id===q.btn&&e.type==='pointerup'){SFX.tap();b.fn()}}recompute()}
 ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>cv.addEventListener(ev,ptrEnd));
@@ -536,18 +536,14 @@ function drawWorld(){const side=W.type==='side';const cx=Math.round(camX+(shake?
   if(LEVELS[level-1].theme==='night'){const gr=o.createRadialGradient(VW/2,VH/2,VH*0.3,VW/2,VH/2,VH*0.9);gr.addColorStop(0,'rgba(0,0,20,0)');gr.addColorStop(1,'rgba(0,0,20,.35)');o.fillStyle=gr;o.fillRect(0,0,VW,VH)}}
 function worldToScreen(x,y){const F=LY.field;return [F.x+(x-camX)*S,F.y+(y-camY)*S]}
 // ---------- controller
-function padPath(cx,cy,a){const h=a*1.5,w=a/2;g.beginPath();g.moveTo(cx-w,cy-h);g.lineTo(cx+w,cy-h);g.lineTo(cx+w,cy-w);g.lineTo(cx+h,cy-w);g.lineTo(cx+h,cy+w);g.lineTo(cx+w,cy+w);g.lineTo(cx+w,cy+h);g.lineTo(cx-w,cy+h);g.lineTo(cx-w,cy+w);g.lineTo(cx-h,cy+w);g.lineTo(cx-h,cy-w);g.lineTo(cx-w,cy-w);g.closePath()}
+function padPath_unused(cx,cy,a){const h=a*1.5,w=a/2;g.beginPath();g.moveTo(cx-w,cy-h);g.lineTo(cx+w,cy-h);g.lineTo(cx+w,cy-w);g.lineTo(cx+h,cy-w);g.lineTo(cx+h,cy+w);g.lineTo(cx+w,cy+w);g.lineTo(cx+w,cy+h);g.lineTo(cx-w,cy+h);g.lineTo(cx-w,cy+w);g.lineTo(cx-h,cy+w);g.lineTo(cx-h,cy-w);g.lineTo(cx-w,cy-w);g.closePath()}
 function drawController(){const C=LY.ctrl,P=LY.pad,a=P.a,side=W&&W.type==='side';
   if(C){rr(C.x+6,C.y+4,C.w-12,C.h-10,22);g.fillStyle='#b9b4c4';g.fill();rr(C.x+14,C.y+12,C.w-28,C.h-26,16);g.fillStyle='#2b2733';g.fill();
     txt("JIM'S TRACT ATTACK",C.x+C.w-30,C.y+32,fitSize("JIM'S TRACT ATTACK",C.w*0.5,18,16),'#ffcf4a','right',{st:0})}
-  g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowOffsetY=4;padPath(P.cx,P.cy,a);g.fillStyle='#121016';g.fill();g.restore();
-  const lit={l:held.l,r:held.r,u:held.u,d:held.d};const arr={u:[0,-1],d:[0,1],l:[-1,0],r:[1,0]};
-  for(const k in arr){const [ux,uy]=arr[k],x=P.cx+ux*a,y=P.cy+uy*a;if(lit[k]){g.fillStyle='#e8c34a';g.fillRect(x-a/2+3,y-a/2+3,a-6,a-6)}
-    g.fillStyle=lit[k]?'#121016':'#77748a';g.beginPath();const s=a*0.22;if(k==='u'){g.moveTo(x,y-s);g.lineTo(x-s,y+s*0.7);g.lineTo(x+s,y+s*0.7)}else if(k==='d'){g.moveTo(x,y+s);g.lineTo(x-s,y-s*0.7);g.lineTo(x+s,y-s*0.7)}else if(k==='l'){g.moveTo(x-s,y);g.lineTo(x+s*0.7,y-s);g.lineTo(x+s*0.7,y+s)}else{g.moveTo(x+s,y);g.lineTo(x-s*0.7,y-s);g.lineTo(x-s*0.7,y+s)}g.fill()}
-  g.fillStyle='#24212b';g.beginPath();g.arc(P.cx,P.cy,a*0.28,0,7);g.fill();
+  // no D-pad (Peter 10/28): a small swipe hint sits where the pad was
+  {const mw=Math.max(110,3*a+20),l1='SWIPE TO WALK',l2=side?'SWIPE ▲ TO JUMP':'ANY WAY';txt(l1,P.cx,P.cy-4,fitSize(l1,mw,17,16),'#9a96ad','center',{st:0});txt(l2,P.cx,P.cy+20,fitSize(l2,mw,17,16),'#9a96ad','center',{st:0})}
   if(state==='title'){const h=a*1.5+8;menuBtns.push({id:'ctl_pad',deco:1,x:P.cx-h,y:P.cy-h,w:2*h,h:2*h,fn(){}});for(const k of ['a','b']){const q=LY.ab[k];menuBtns.push({id:'ctl_'+k,deco:1,x:q.cx-q.r-6,y:q.cy-q.r-6,w:2*q.r+12,h:2*q.r+34,fn(){}})}}
-  if(side!==undefined&&state==='play'){const lx=P.cx+a*0.62,fs=16;if(side){txt('JUMP',lx+a*0.15,P.cy-a*1.25,fs,'#fff','left',{st:0})}else txt('WALK',lx+a*0.15,P.cy-a*1.25,fs,'#fff','left',{st:0})}
-  for(const k of ['b','a']){const q=LY.ab[k],on=held[k],dy=on?3:0;g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowOffsetY=on?1:5;g.beginPath();g.arc(q.cx,q.cy+dy,q.r,0,7);g.fillStyle=k==='a'?'#f2c230':'#d8343f';g.fill();g.restore();
+    for(const k of ['b','a']){const q=LY.ab[k],on=held[k],dy=on?3:0;g.save();g.shadowColor='rgba(0,0,0,.5)';g.shadowOffsetY=on?1:5;g.beginPath();g.arc(q.cx,q.cy+dy,q.r,0,7);g.fillStyle=k==='a'?'#f2c230':'#d8343f';g.fill();g.restore();
     g.beginPath();g.arc(q.cx-q.r*0.3,q.cy+dy-q.r*0.35,q.r*0.22,0,7);g.fillStyle='rgba(255,255,255,.35)';g.fill();txt(k.toUpperCase(),q.cx,q.cy+dy+1,Math.round(q.r*0.8),k==='a'?'#4a3200':'#fff','center',{st:0});
     txt(k==='a'?'PRAY':'TRACT',q.cx,q.cy+q.r+15,17,'#fff','center',{st:C?0:undefined})}}
 // ---------- HUD
@@ -624,7 +620,7 @@ function drawWin(){const c=wideCol(),F=c.F,n=tallyRows().length;const l=wrap('"H
   txt('FINAL SCORE '+score,CW/2,y+2,21,'#ffe14a','center',{f:PIX});y+=22;
   button('again',c.x+10,y,c.w/2-15,48,'↻ AGAIN','#1f9d55',()=>{score=0;newGame(1)},19);menuBtns[menuBtns.length-1].primary=1;button('ttl3',c.x+c.w/2+5,y,c.w/2-15,48,'🏠 TITLE','#45405e',()=>{state='title'},19)}
 const HELP=[['GOAL','Help Jim walk around, hand out Bible tracts to people, and pray away the little gloom goblins. Hand out enough tracts, then go to the church to finish the level.'],
- ['D-PAD','◀ ▶ walk. Side levels: ▲ jumps, ▼ drops off a bench. Top-down levels: walk any way.'],
+ ['SWIPE','Swipe ◀ ▶ to walk: keep your finger down to keep walking, lift it to stop. Side levels: swipe ▲ to jump, swipe ▼ to drop off a bench. Top-down levels: swipe any way to walk.'],
  ['B = TRACT','Hands a tract to someone close, or tosses one to them. Happy people give +100.'],
  ['A = PRAY','Sends a glowing prayer of light. Goblins dissolve into light (+50).'],
  ['WATCH OUT','Goblins and gloomy people take a heart if they touch Jim. Step away or jump, then pray.'],

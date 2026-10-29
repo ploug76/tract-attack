@@ -7,7 +7,7 @@ Help Jim hand out Bible tracts, send glowing prayers that turn little gloom gobl
 4 Downtown at Night (side), 5 Farmers Market (top-down, gloom pits + the Big Grumble at the chapel door).
 
 ## Controls (NES-style pad along the bottom; on the sides in landscape)
-- D-pad: walk. Side levels: ▲ jump, ▼ drop off a bench. Top-down: walk any way.
+- Swipe: walk (hold to keep walking, lift to stop). Side levels: swipe ▲ to jump, ▼ to drop off a bench. Top-down: swipe any way.
 - B = TRACT: hand a tract to someone close or toss one to them (+100). Hold to keep tossing.
 - A = PRAY: a glowing prayer orb. Goblins dissolve into light (+50). Gloomy people are set free (+300, never hurt).
 - Keys: arrows/WASD, Z = tract, X = pray, Space = jump, P pause, M mute.
