@@ -202,7 +202,11 @@ function drawPerson(x,y,L,face,ph,act,dir,amp=1){const kid=L.kid,leg=kid?3:5,tor
   // arms
   if(front){px(x-6,ty+1+(sw>0?1:0),2,tor-2,L.shirt);px(x+4,ty+1+(sw<0?1:0),2,tor-2,L.shirt);px(x-6,ty+tor-1,2,2,L.skin);px(x+4,ty+tor-1,2,2,L.skin)}
   else if(act>0){px(x+(face>0?3:-9),ty+1,6,2,L.shirt);px(x+(face>0?9:-11),ty+1,2,2,L.skin);if(L.hero)px(x+(face>0?9:-12),ty-2,3,4,'#fff')}
-  else{px(x-1-sw*face*0.6,ty+1,2,tor-2,L.shirt);px(x-1-sw*face*0.6,ty+tor-1,2,2,L.skin)}
+  else{/* arm check (Oct 30 2026): pixel arm is upper arm + forearm - forward swing bends the forearm up at the elbow, back swing trails; opposite the near leg, eases to hanging */
+    const av=-Math.sin(ph)*amp,M=(rx,ry,w,h,c)=>px(face>0?x+rx:x-rx-w,ty+ry,w,h,c);
+    if(av>0.4){M(0,1,2,3,L.shirt);M(1,4,3,2,L.shirt);M(4,3,2,2,L.skin)}
+    else if(av<-0.4){M(-2,1,2,3,L.shirt);M(-3,4,2,tor-5,L.shirt);M(-3,tor-1,2,2,L.skin)}
+    else{M(-1,1,2,tor-2,L.shirt);M(-1,tor-1,2,2,L.skin)}}
   // head
   const hx=x-5,hy=top;
   if(L.hero){const m=dir==='u'?HERO.headB:dir==='d'?HERO.headF:HERO.head,mw=m[0].length,mh=m.length;drawMap(m,HERO.pal,x-Math.floor(mw/2)+(front?0:(face>0?0:0)),y-leg-tor-mh+1,!front&&face<0)}
@@ -443,11 +447,11 @@ function update(dt){t+=dt;if(toastT>0)toastT-=dt;if(shake>0)shake=Math.max(0,sha
     H.drop-=dt;H.vy+=560*dt;const py=H.y;H.x=clamp(H.x+H.vx*dt,8,W.len-8);H.y+=H.vy*dt;H.onG=false;
     if(H.y>=GY){H.y=GY;H.vy=0;H.onG=true}else if(H.vy>=0&&H.drop<=0){for(const p of W.plats){if(H.x>p.x-3&&H.x<p.x+p.w+3&&py<=p.y+0.5&&H.y>=p.y){H.y=p.y;H.vy=0;H.onG=true;break}}}
     if(H.onG&&H.y<GY&&!W.plats.some(p=>H.x>p.x-3&&H.x<p.x+p.w+3&&Math.abs(H.y-p.y)<1))H.onG=false;
-    if(mv&&H.onG)H.ph+=dt*12;
+    if(mv&&H.onG)H.ph+=dt*Math.PI*2.5;/* cadence (arm check, Oct 30 2026): hero ~2.5 steps/s (was ~3.8), townsfolk 1.75 (were ~0.6-1.4) */
     // the church door at the end
     if(H.x>W.len-62){if(need()===0){levelClear();return}else{H.x=W.len-62;if(exitMsgT<=0){toast('Hand out '+need()+' more tract'+(need()>1?'s':'')+' first!',2);SFX.no();exitMsgT=2.2}}}
   }else{let dx=(I.r?1:0)-(I.l?1:0),dy=(I.d?1:0)-(I.u?1:0);if(dx||dy){const n=Math.hypot(dx,dy),sp=62*dt;if(Math.abs(dx)>=Math.abs(dy)&&dx)H.dir=dx>0?'r':'l';else if(dy)H.dir=dy>0?'d':'u';if(dx)H.face=dx;
-      moveTop(H,dx/n*sp,dy/n*sp);H.ph+=dt*12}
+      moveTop(H,dx/n*sp,dy/n*sp);H.ph+=dt*Math.PI*2.3}
     if(H.kx||H.ky){moveTop(H,H.kx*dt,H.ky*dt);H.kx*=0.85;H.ky*=0.85;if(Math.hypot(H.kx,H.ky)<4)H.kx=H.ky=0}
     if(level===NL&&need()===0&&!boss){boss={x:W.door.x,y:W.door.y+26,k:'boss',hp:EASY?5:(Lv().bossHp||8),ph:0,face:1,spd:11,dying:0,flash:0,st:3};gobs.push(boss);bossOn=true;toast('The Big Grumble blocks the chapel! PRAY!',3);shake=5;SFX.gloom()}
     if(Math.hypot(H.x-W.door.x,H.y-W.door.y)<16){if(need()===0&&!bossOn){levelClear();return}else if(exitMsgT<=0){toast(need()?'Hand out '+need()+' more tract'+(need()>1?'s':'')+' first!':'Pray away the Big Grumble first!',2);SFX.no();exitMsgT=2.2}}}
@@ -472,8 +476,8 @@ function update(dt){t+=dt;if(toastT>0)toastT-=dt;if(shake>0)shake=Math.max(0,sha
       if(side)p.x+=Math.sign(dx)*sp;else moveTop(p,dx/d*sp,dy/d*sp);if(!(p.grace>0)&&Math.abs(dx)<8&&(side?Math.abs(H.y-p.y)<14:Math.abs(dy)<8))hurt(p.x,p.y);continue}
     if(p.st==='happy'||p.st==='free'){p.face=H.x<p.x?-1:1;if(p.t<=0)p.st='walk';if(Math.random()<dt*3)parts.push({x:p.x+rnd(-4,4),y:p.y-24,vx:0,vy:-14,life:0.8,max:0.8,c:'#ff6f91',s:2,g:0,heart:1});continue}
     if(p.st==='idle'){if(p.t<=0){p.st='walk';p.t=rnd(2,5)}continue}
-    if(side){p.x+=p.face*p.spd*dt*(p.got?0.7:1);p._wd=(p._wd||0)+p.spd*dt*(p.got?0.7:1);if(Math.abs(p.x-p.x0)>p.range){p.face=p.x>p.x0?-1:1}p.x=clamp(p.x,20,W.len-100);if(p.t<=0&&Math.random()<0.3){p.st='idle';p.t=rnd(1,2.5)}else if(p.t<=0)p.t=rnd(2,5)}
-    else{const sp=p.spd*0.8*dt,v={l:[-1,0],r:[1,0],u:[0,-1],d:[0,1]}[p.dir];p._wd=(p._wd||0)+sp;if(!moveTop(p,v[0]*sp,v[1]*sp)||p.t<=0){p.dir=pick(['u','d','l','r']);p.t=rnd(1.5,3.5);if(Math.random()<0.25){p.st='idle';p.t=rnd(1,2)}}if(v[0])p.face=v[0]}}
+    if(side){p.x+=p.face*p.spd*dt*(p.got?0.7:1);p._wd=(p._wd||0)+p.spd*dt*(p.got?0.7:1);p._gp=(p._gp||0)+dt*Math.PI*1.75;if(Math.abs(p.x-p.x0)>p.range){p.face=p.x>p.x0?-1:1}p.x=clamp(p.x,20,W.len-100);if(p.t<=0&&Math.random()<0.3){p.st='idle';p.t=rnd(1,2.5)}else if(p.t<=0)p.t=rnd(2,5)}
+    else{const sp=p.spd*0.8*dt,v={l:[-1,0],r:[1,0],u:[0,-1],d:[0,1]}[p.dir];p._wd=(p._wd||0)+sp;p._gp=(p._gp||0)+dt*Math.PI*1.75;if(!moveTop(p,v[0]*sp,v[1]*sp)||p.t<=0){p.dir=pick(['u','d','l','r']);p.t=rnd(1.5,3.5);if(Math.random()<0.25){p.st='idle';p.t=rnd(1,2)}}if(v[0])p.face=v[0]}}
   // goblins
   side?spawnSide(dt):spawnTop(dt);
   for(const b of gobs){b.ph+=dt;if(b.flash>0)b.flash-=dt*4;if(b.dying){b.dying-=dt;continue}
@@ -528,7 +532,7 @@ function drawWorld(){const side=W.type==='side';const cx=Math.round(camX+(shake?
       {const b=Math.round(Math.sin(t*6)*2);o.fillStyle='#ffe14a';o.beginPath();o.moveTo(x,y+4+b);o.lineTo(x-7,y+13+b);o.lineTo(x+7,y+13+b);o.fill();o.fillStyle='#3a2a20';o.fillRect(x-1,y+9+b,3,1)}}}
   for(const k of W.picks){if(k.got)continue;const x=k.x-cx,y=k.y-cy+Math.sin(t*3+k.x)*1.5;o.save();o.globalCompositeOperation='lighter';o.fillStyle='rgba(255,220,120,.25)';o.fillRect(x-6,y-6,12,12);o.restore();
     px(x-4,y-3,8,5,'#d99a4e');px(x-3,y-4,6,1,'#e9b46a');px(x-2,y-2,1,1,'#b07434');px(x+1,y-2,1,1,'#b07434')}
-  const ents=[];for(const p of W.people)ents.push({y:p.y,f:()=>{if(p.st==='trouble'||p.st==='turning'&&p.t<0.45)drawTroubled({x:p.x-cx,y:p.y-cy,face:p.face,look:p.look},p.ph);else{const sh=p.st==='turning'?rnd(-1,1):0;drawPerson(p.x-cx+sh,p.y-cy,p.look,p.face,(p._wd||0)*.22,0,side?null:(p.st==='walk'?(p.dir==='u'?'u':p.dir==='d'?'d':null):'d'),trLeg(p,p.st==='walk'));if(p.got&&p.st!=='turning')px(p.x-cx+(p.face>0?3:-6),p.y-cy-(p.look.kid?10:13),3,4,'#fff')}}});
+  const ents=[];for(const p of W.people)ents.push({y:p.y,f:()=>{if(p.st==='trouble'||p.st==='turning'&&p.t<0.45)drawTroubled({x:p.x-cx,y:p.y-cy,face:p.face,look:p.look},p.ph);else{const sh=p.st==='turning'?rnd(-1,1):0;drawPerson(p.x-cx+sh,p.y-cy,p.look,p.face,p._gp||0,0,side?null:(p.st==='walk'?(p.dir==='u'?'u':p.dir==='d'?'d':null):'d'),trLeg(p,p.st==='walk'));if(p.got&&p.st!=='turning')px(p.x-cx+(p.face>0?3:-6),p.y-cy-(p.look.kid?10:13),3,4,'#fff')}}});
   for(const b of gobs)ents.push({y:b.y,f:()=>{const al=b.dying?Math.max(0,b.dying/0.6):1;drawGoblin(b.x-cx,b.y-cy,b.face,b.ph,b.k==='fly'?'fly':'walk',b.k==='boss'?2.4:1,al,b.dying?1-al+0.3:b.flash);if(b.k==='boss'&&!b.dying)for(let k=0;k<b.hp;k++)px(b.x-cx-16+k*4,b.y-cy-34,3,2,'#b9a6ff')}});
   ents.push({y:H.y+0.1,f:()=>{if(H.inv>0&&Math.floor(t*14)%2)return;drawPerson(H.x-cx,H.y-cy,HEROLOOK,H.face,H.ph,H.act,side?null:(H.dir==='u'?'u':H.dir==='d'?'d':null),trLeg(H,(side?(H.onG&&Math.abs(H.vx)>1):(held.l||held.r||held.u||held.d||keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||(window.__QA&&__QA.inp&&(__QA.inp.l||__QA.inp.r||__QA.inp.u||__QA.inp.d))))))}});
   ents.sort((a,b)=>a.y-b.y);for(const e of ents)e.f();
@@ -663,7 +667,7 @@ function render(){menuBtns=[];BTN=menuBtns;g.setTransform(DPR,0,0,DPR,0,0);g.ima
   drawTopBtns()}
 // title attract: hero strolls, goblins scatter from prayers
 let demoT=0;function titleDemo(){if(!W||W.type!=='side'||level!==1){level=1;W=buildSide(LEVELS[0],7);H={x:40,y:GY,vx:0,vy:0,face:1,onG:true,inv:0,act:0,ph:0,cdA:0,cdB:0};gobs=[];shots=[];ST={given:0,gobs:0,freed:0,pits:0,gives:0,t:0}}
-  const dt=1/60;demoT+=dt;H.x+=30*dt;H.ph+=dt*10;H.face=1;if(H.x>W.len-200){H.x=40;gobs=[]}camX=clamp(H.x-VW*0.35,0,W.len-VW);camY=GY-VH+36;
+  const dt=1/60;demoT+=dt;H.x+=30*dt;H.ph+=dt*Math.PI*1.75;H.face=1;if(H.x>W.len-200){H.x=40;gobs=[]}camX=clamp(H.x-VW*0.35,0,W.len-VW);camY=GY-VH+36;
   for(const p of W.people){p.ph+=dt;p.x+=p.face*p.spd*dt*0.5;if(Math.abs(p.x-p.x0)>p.range)p.face=p.x>p.x0?-1:1}
   if(Math.random()<dt*0.5&&gobs.length<2)gobs.push({x:camX+VW+10,y:GY,k:'walk',hp:1,ph:0,face:-1,spd:20,dying:0,flash:0});
   for(const b of gobs){b.ph+=dt;if(b.dying){b.dying-=dt;continue}b.x-=b.spd*dt;if(b.x-H.x<60&&!b.shot){b.shot=1;shots.push({k:'pray',x:H.x+8,y:H.y-14,vx:160,vy:0,life:1,ph:0,y0:H.y-14})}}
